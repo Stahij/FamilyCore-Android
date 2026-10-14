@@ -457,8 +457,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
                     onBack = { kitchenOpen = false }
                 )
                 screen == Screen.Home -> HomeScreen(
-                    goldTheme = themeName == "Obsidian Gold",
-                    tasks.count { !it.done }, events.size, notes.size, shopping.count { !it.bought },
+                    themeName == "Obsidian Gold", tasks.count { !it.done }, events.size, notes.size, shopping.count { !it.bought },
                     onOpenTasks = { screen = Screen.Tasks }, onOpenCalendar = { screen = Screen.Calendar },
                     onOpenNotes = { notesOpen = true }, onOpenKitchen = { kitchenOpen = true },
                     onOpenChat = { screen = Screen.Chat }, onOpenRoom = { roomOpen = it }
