@@ -41,7 +41,7 @@ private val Sage = Color(0xFFE8F1E8)
 private val LocalAppLanguage = staticCompositionLocalOf { "Русский" }
 
 @Composable
-private fun tr(value: String): String = translations[LocalAppLanguage.current]?.get(value) ?: value
+private fun tr(value: String): String = translations[LocalAppLanguage.current]?.get(value) ?: extraTranslations[LocalAppLanguage.current]?.get(value) ?: value
 
 private val translations: Map<String, Map<String, String>> = mapOf(
     "English" to mapOf(
@@ -106,6 +106,191 @@ private val translations: Map<String, Map<String, String>> = mapOf(
         "Тема оформления" to "थीम", "Лаванда" to "लैवेंडर", "Шалфей" to "सेज", "Океан" to "समुद्र", "Язык приложения" to "ऐप की भाषा",
         "Русский" to "रूसी", "English" to "अंग्रेज़ी", "中文（简体）" to "सरलीकृत चीनी", "Español" to "स्पेनिश", "हिन्दी" to "हिन्दी",
         "Выбор темы сохраняется на этом устройстве." to "थीम इस डिवाइस पर सहेजी जाती है।", "Выбор языка сохраняется на этом устройстве." to "भाषा इस डिवाइस पर सहेजी जाती है।"
+    )
+)
+
+
+private val extraTranslations: Map<String, Map<String, String>> = mapOf(
+    "English" to mapOf(
+        "← Домой" to "← Home", "Добро пожаловать" to "Welcome", "Открыть покупки и запасы" to "Open shopping and pantry",
+        "Заметки и воспоминания" to "Notes and memories", "Чат подключится после настройки серверной синхронизации." to "Chat will be available after server sync is configured.",
+        "Задачи и домашние дела" to "Tasks and chores", "Расписание и события" to "Schedule and events", "Открыть заметки" to "Open notes",
+        "Документы и ИИ-помощник появятся в следующих этапах." to "Documents and the AI assistant will arrive in a later update.",
+        "Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации." to "Only local actions are available here for now. Device pairing and help alerts require a secure implementation.",
+        "Посмотреть семейные дела" to "View family tasks", "Общие дела" to "Shared tasks",
+        "Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена." to "Tasks are saved on this phone for now. Family sync is not connected yet.",
+        "Что нужно сделать?" to "What needs to be done?", "Исполнитель (необязательно)" to "Assigned to (optional)", "Срок, например 20.10.2026" to "Due date, e.g. 20/10/2026",
+        "Приоритет" to "Priority", "Низкий" to "Low", "Обычный" to "Normal", "Высокий" to "High", "Добавить задачу" to "Add task",
+        "Удалить" to "Delete", "Кому" to "Assigned to", "Срок" to "Due", "Все" to "All", "Активные" to "Active", "Готовые" to "Completed",
+        "Здесь появятся семейные задачи." to "Family tasks will appear here.", "В этом фильтре пока пусто." to "Nothing in this filter yet.",
+        "Добавь дело выше или выбери другой фильтр." to "Add a task above or choose another filter.",
+        "Семейный календарь" to "Family calendar", "Локальные события, пока без системных напоминаний." to "Local events; system reminders are not available yet.",
+        "Название события" to "Event title", "Дата или время" to "Date or time", "Сохранить событие" to "Save event",
+        "Пока нет событий." to "No events yet.", "Добавь день рождения, встречу или семейный план." to "Add a birthday, meeting, or family plan.",
+        "Список покупок, домашние запасы и рецепты." to "Shopping list, pantry, and recipes.", "События" to "Events", "Открыть" to "Open",
+        "К календарю" to "Go to calendar", "Покупки" to "Shopping", "К списку" to "Open list", "Заметки" to "Notes", "Мои записи" to "My notes",
+        "Запасы" to "Pantry", "Рецепты" to "Recipes", "Добавить продукт" to "Add item", "Добавить в список" to "Add to list", "Убрать" to "Remove",
+        "Список пока пуст." to "The list is empty for now.", "Добавь продукты, которые нужно купить." to "Add items you need to buy.",
+        "Продукт дома" to "Item in pantry", "Срок годности (необязательно)" to "Expiry date (optional)", "Добавить в запасы" to "Add to pantry",
+        "Запасы ещё не заполнены." to "Your pantry is empty for now.", "Добавь продукты и при желании укажи срок годности." to "Add pantry items and optionally enter expiry dates.",
+        "Овсяная каша с яблоком" to "Apple oatmeal", "Овсяные хлопья, молоко или вода, яблоко. Свари хлопья и добавь нарезанное яблоко." to "Oats, milk or water, and an apple. Cook the oats and add the chopped apple.",
+        "Овощной омлет" to "Vegetable omelette", "Яйца, помидор, сладкий перец. Нарежь овощи, добавь яйца и готовь до полной готовности." to "Eggs, tomato, and bell pepper. Chop the vegetables, add the eggs, and cook through.",
+        "Тёплый бутерброд с сыром" to "Warm cheese sandwich", "Хлеб, сыр, по желанию помидор. Прогрей до расплавления сыра." to "Bread, cheese, and optionally tomato. Heat until the cheese melts.",
+        "Автоматическое меню и расчёт ингредиентов пока не подключены." to "Automatic meal planning and ingredient calculations are not available yet.",
+        "Чат пока не подключён" to "Chat is not connected yet.",
+        "Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений." to "Real messaging requires family accounts, secure sync, and message delivery. No fake participants or messages are shown here.",
+        "Мои заметки" to "My notes", "Заголовок" to "Title", "Текст заметки" to "Note text", "Сохранить заметку" to "Save note",
+        "Поиск по заметкам" to "Search notes", "Заметок пока нет." to "No notes yet.", "Создай первую запись выше." to "Create your first note above.",
+        "Без названия" to "Untitled", "Заметка сохранена" to "Note saved", "Заметка удалена" to "Note deleted", "Покупка сохранена" to "Shopping item saved",
+        "Список покупок сохранён" to "Shopping list saved", "Покупка удалена" to "Shopping item removed", "Продукт добавлен в запасы" to "Item added to pantry",
+        "Задача сохранена" to "Task saved", "Статус задачи сохранён" to "Task status saved", "Задача удалена" to "Task deleted",
+        "Событие сохранено" to "Event saved", "Событие удалено" to "Event deleted", "Данные сохраняются на этом устройстве · синхронизации пока нет" to "Data is saved on this device · sync is not available yet",
+        "Не указан" to "Not specified", "Дата не указана" to "Date not specified", "Имя не указано" to "Name not set",
+        "Всё для продуктов, покупок и приготовления еды." to "Everything for groceries, shopping, and cooking.",
+        "Место для семейного общения и общих воспоминаний." to "A place for family conversations and shared memories.",
+        "Здесь можно планировать дела и семейное расписание." to "Plan chores and family schedules here.",
+        "Личные записи и документы — с приватностью по умолчанию." to "Personal notes and documents, private by default.",
+        "Быстрый доступ к семейным действиям и устройствам." to "Quick access to family actions and devices.",
+        "Откроется после подключения защищённой синхронизации" to "Available after secure sync is connected",
+        "Например, 12.05.1995" to "For example, 12/05/1995",
+        "Родитель" to "Parent", "Ребёнок" to "Child", "Другой" to "Other",
+        "Лаванда" to "Lavender", "Шалфей" to "Sage", "Океан" to "Ocean"
+    ),
+    "中文（简体）" to mapOf(
+        "← Домой" to "← 首页", "Добро пожаловать" to "欢迎", "Открыть покупки и запасы" to "打开购物清单和储物柜",
+        "Заметки и воспоминания" to "笔记与回忆", "Чат подключится после настройки серверной синхронизации." to "配置服务器同步后即可使用聊天。",
+        "Задачи и домашние дела" to "任务与家务", "Расписание и события" to "日程与活动", "Открыть заметки" to "打开笔记",
+        "Документы и ИИ-помощник появятся в следующих этапах." to "文档和 AI 助手将在后续版本推出。",
+        "Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации。" to "目前这里只提供本地操作。设备配对和求助提醒需要安全实现。",
+        "Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации." to "目前这里只提供本地操作。设备配对和求助提醒需要安全实现。",
+        "Посмотреть семейные дела" to "查看家庭任务", "Общие дела" to "共同任务",
+        "Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена." to "任务目前保存在这部手机上，家庭同步尚未启用。",
+        "Что нужно сделать?" to "需要做什么？", "Исполнитель (необязательно)" to "负责人（可选）", "Срок, например 20.10.2026" to "截止日期，例如 2026/10/20",
+        "Приоритет" to "优先级", "Низкий" to "低", "Обычный" to "普通", "Высокий" to "高", "Добавить задачу" to "添加任务",
+        "Удалить" to "删除", "Кому" to "负责人", "Срок" to "期限", "Все" to "全部", "Активные" to "进行中", "Готовые" to "已完成",
+        "Здесь появятся семейные задачи." to "家庭任务会显示在这里。", "В этом фильтре пока пусто." to "此筛选条件下暂无内容。",
+        "Добавь дело выше или выбери другой фильтр." to "请在上方添加任务，或选择其他筛选条件。",
+        "Семейный календарь" to "家庭日历", "Локальные события, пока без системных напоминаний." to "本地活动；系统提醒功能尚未启用。",
+        "Название события" to "活动名称", "Дата или время" to "日期或时间", "Сохранить событие" to "保存活动",
+        "Пока нет событий." to "暂时没有活动。", "Добавь день рождения, встречу или семейный план." to "添加生日、会面或家庭计划。",
+        "Список покупок, домашние запасы и рецепты." to "购物清单、家庭储物和食谱。", "События" to "活动", "Открыть" to "打开",
+        "К календарю" to "前往日历", "Покупки" to "购物", "К списку" to "查看清单", "Заметки" to "笔记", "Мои записи" to "我的记录",
+        "Запасы" to "储物", "Рецепты" to "食谱", "Добавить продукт" to "添加物品", "Добавить в список" to "加入清单", "Убрать" to "移除",
+        "Список пока пуст." to "清单暂时为空。", "Добавь продукты, которые нужно купить." to "添加需要购买的物品。",
+        "Продукт дома" to "储物物品", "Срок годности (необязательно)" to "保质期（可选）", "Добавить в запасы" to "添加到储物",
+        "Запасы ещё не заполнены." to "储物清单为空。", "Добавь продукты и при желании укажи срок годности." to "添加物品，并可选择填写保质期。",
+        "Овсяная каша с яблоком" to "苹果燕麦粥", "Овсяные хлопья, молоко или вода, яблоко. Свари хлопья и добавь нарезанное яблоко." to "燕麦、牛奶或水、苹果。煮好燕麦后加入切好的苹果。",
+        "Овощной омлет" to "蔬菜煎蛋", "Яйца, помидор, сладкий перец. Нарежь овощи, добавь яйца и готовь до полной готовности." to "鸡蛋、番茄和甜椒。切好蔬菜，加入鸡蛋并充分煎熟。",
+        "Тёплый бутерброд с сыром" to "热芝士三明治", "Хлеб, сыр, по желанию помидор. Прогрей до расплавления сыра." to "面包、芝士，可选番茄。加热至芝士融化。",
+        "Автоматическое меню и расчёт ингредиентов пока не подключены." to "自动菜单和食材用量计算尚未启用。",
+        "Чат пока не подключён" to "聊天功能尚未连接。",
+        "Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений." to "真正的聊天需要家庭账号、安全同步和消息传递。这里不会显示虚构的参与者或消息。",
+        "Мои заметки" to "我的笔记", "Заголовок" to "标题", "Текст заметки" to "笔记内容", "Сохранить заметку" to "保存笔记",
+        "Поиск по заметкам" to "搜索笔记", "Заметок пока нет." to "暂时没有笔记。", "Создай первую запись выше." to "请在上方创建第一条笔记。",
+        "Без названия" to "无标题", "Заметка сохранена" to "笔记已保存", "Заметка удалена" to "笔记已删除", "Покупка сохранена" to "购物项已保存",
+        "Список покупок сохранён" to "购物清单已保存", "Покупка удалена" to "购物项已移除", "Продукт добавлен в запасы" to "物品已加入储物",
+        "Задача сохранена" to "任务已保存", "Статус задачи сохранён" to "任务状态已保存", "Задача удалена" to "任务已删除",
+        "Событие сохранено" to "活动已保存", "Событие удалено" to "活动已删除", "Данные сохраняются на этом устройстве · синхронизации пока нет" to "数据保存在本设备上 · 尚未启用同步",
+        "Не указан" to "未填写", "Дата не указана" to "未填写日期", "Имя не указано" to "未填写姓名",
+        "Всё для продуктов, покупок и приготовления еды." to "管理食品、购物和烹饪所需的一切。",
+        "Место для семейного общения и общих воспоминаний." to "家人交流和分享回忆的地方。",
+        "Здесь можно планировать дела и семейное расписание." to "在这里安排家务和家庭日程。",
+        "Личные записи и документы — с приватностью по умолчанию." to "个人笔记和文档，默认注重隐私。",
+        "Быстрый доступ к семейным действиям и устройствам." to "快速访问家庭操作和设备。",
+        "Откроется после подключения защищённой синхронизации" to "安全同步启用后可使用",
+        "Например, 12.05.1995" to "例如：1995/05/12",
+        "Родитель" to "家长", "Ребёнок" to "孩子", "Другой" to "其他",
+        "Лаванда" to "薰衣草", "Шалфей" to "鼠尾草", "Океан" to "海洋"
+    ),
+    "Español" to mapOf(
+        "← Домой" to "← Inicio", "Добро пожаловать" to "Bienvenido", "Открыть покупки и запасы" to "Abrir compras y despensa",
+        "Заметки и воспоминания" to "Notas y recuerdos", "Чат подключится после настройки серверной синхронизации." to "El chat estará disponible cuando se configure la sincronización del servidor.",
+        "Задачи и домашние дела" to "Tareas del hogar", "Расписание и события" to "Horario y eventos", "Открыть заметки" to "Abrir notas",
+        "Документы и ИИ-помощник появятся в следующих этапах." to "Los documentos y el asistente de IA llegarán en una actualización futura.",
+        "Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации." to "Por ahora solo hay acciones locales. La vinculación de dispositivos y las alertas de ayuda requieren una implementación segura.",
+        "Посмотреть семейные дела" to "Ver tareas familiares", "Общие дела" to "Tareas compartidas",
+        "Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена." to "Por ahora, las tareas se guardan en este teléfono. La sincronización familiar aún no está conectada.",
+        "Что нужно сделать?" to "¿Qué hay que hacer?", "Исполнитель (необязательно)" to "Responsable (opcional)", "Срок, например 20.10.2026" to "Fecha límite, p. ej. 20/10/2026",
+        "Приоритет" to "Prioridad", "Низкий" to "Bajo", "Обычный" to "Normal", "Высокий" to "Alto", "Добавить задачу" to "Añadir tarea",
+        "Удалить" to "Eliminar", "Кому" to "Responsable", "Срок" to "Fecha límite", "Все" to "Todas", "Активные" to "Activas", "Готовые" to "Completadas",
+        "Здесь появятся семейные задачи." to "Aquí aparecerán las tareas familiares.", "В этом фильтре пока пусто." to "Este filtro aún está vacío.",
+        "Добавь дело выше или выбери другой фильтр." to "Añade una tarea arriba o elige otro filtro.",
+        "Семейный календарь" to "Calendario familiar", "Локальные события, пока без системных напоминаний." to "Eventos locales; los recordatorios del sistema aún no están disponibles.",
+        "Название события" to "Nombre del evento", "Дата или время" to "Fecha u hora", "Сохранить событие" to "Guardar evento",
+        "Пока нет событий." to "Todavía no hay eventos.", "Добавь день рождения, встречу или семейный план." to "Añade un cumpleaños, una reunión o un plan familiar.",
+        "Список покупок, домашние запасы и рецепты." to "Lista de compras, despensa y recetas.", "События" to "Eventos", "Открыть" to "Abrir",
+        "К календарю" to "Ir al calendario", "Покупки" to "Compras", "К списку" to "Ver lista", "Заметки" to "Notas", "Мои записи" to "Mis notas",
+        "Запасы" to "Despensa", "Рецепты" to "Recetas", "Добавить продукт" to "Añadir artículo", "Добавить в список" to "Añadir a la lista", "Убрать" to "Quitar",
+        "Список пока пуст." to "La lista está vacía por ahora.", "Добавь продукты, которые нужно купить." to "Añade los productos que necesitas comprar.",
+        "Продукт дома" to "Artículo en la despensa", "Срок годности (необязательно)" to "Fecha de caducidad (opcional)", "Добавить в запасы" to "Añadir a la despensa",
+        "Запасы ещё не заполнены." to "La despensa aún está vacía.", "Добавь продукты и при желании укажи срок годности." to "Añade productos e indica su fecha de caducidad si quieres.",
+        "Овсяная каша с яблоком" to "Avena con manzana", "Овсяные хлопья, молоко или вода, яблоко. Свари хлопья и добавь нарезанное яблоко." to "Avena, leche o agua y una manzana. Cocina la avena y añade la manzana cortada.",
+        "Овощной омлет" to "Tortilla de verduras", "Яйца, помидор, сладкий перец. Нарежь овощи, добавь яйца и готовь до полной готовности." to "Huevos, tomate y pimiento. Corta las verduras, añade los huevos y cocina bien.",
+        "Тёплый бутерброд с сыром" to "Sándwich caliente de queso", "Хлеб, сыр, по желанию помидор. Прогрей до расплавления сыра." to "Pan, queso y tomate opcional. Calienta hasta que el queso se derrita.",
+        "Автоматическое меню и расчёт ингредиентов пока не подключены." to "La planificación automática de menús y el cálculo de ingredientes aún no están disponibles.",
+        "Чат пока не подключён" to "El chat aún no está conectado.",
+        "Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений." to "La mensajería real requiere cuentas familiares, sincronización segura y entrega de mensajes. Aquí no se muestran participantes ni mensajes ficticios.",
+        "Мои заметки" to "Mis notas", "Заголовок" to "Título", "Текст заметки" to "Texto de la nota", "Сохранить заметку" to "Guardar nota",
+        "Поиск по заметкам" to "Buscar notas", "Заметок пока нет." to "Todavía no hay notas.", "Создай первую запись выше." to "Crea tu primera nota arriba.",
+        "Без названия" to "Sin título", "Заметка сохранена" to "Nota guardada", "Заметка удалена" to "Nota eliminada", "Покупка сохранена" to "Artículo guardado",
+        "Список покупок сохранён" to "Lista de compras guardada", "Покупка удалена" to "Artículo eliminado", "Продукт добавлен в запасы" to "Artículo añadido a la despensa",
+        "Задача сохранена" to "Tarea guardada", "Статус задачи сохранён" to "Estado de la tarea guardado", "Задача удалена" to "Tarea eliminada",
+        "Событие сохранено" to "Evento guardado", "Событие удалено" to "Evento eliminado", "Данные сохраняются на этом устройстве · синхронизации пока нет" to "Los datos se guardan en este dispositivo · aún no hay sincronización",
+        "Не указан" to "No especificado", "Дата не указана" to "Fecha no indicada", "Имя не указано" to "Nombre sin indicar",
+        "Всё для продуктов, покупок и приготовления еды." to "Todo para alimentos, compras y cocina.",
+        "Место для семейного общения и общих воспоминаний." to "Un lugar para conversar en familia y compartir recuerdos.",
+        "Здесь можно планировать дела и семейное расписание." to "Aquí puedes planificar tareas y horarios familiares.",
+        "Личные записи и документы — с приватностью по умолчанию." to "Notas y documentos personales, privados por defecto.",
+        "Быстрый доступ к семейным действиям и устройствам." to "Acceso rápido a acciones y dispositivos familiares.",
+        "Откроется после подключения защищённой синхронизации" to "Disponible cuando se active la sincronización segura",
+        "Например, 12.05.1995" to "Por ejemplo, 12/05/1995",
+        "Родитель" to "Madre/padre", "Ребёнок" to "Hijo/a", "Другой" to "Otro",
+        "Лаванда" to "Lavanda", "Шалфей" to "Salvia", "Океан" to "Océano"
+    ),
+    "हिन्दी" to mapOf(
+        "← Домой" to "← होम", "Добро пожаловать" to "स्वागत है", "Открыть покупки и запасы" to "खरीदारी और भंडार खोलें",
+        "Заметки и воспоминания" to "नोट्स और यादें", "Чат подключится после настройки серверной синхронизации." to "सर्वर सिंक सेट होने के बाद चैट उपलब्ध होगी।",
+        "Задачи и домашние дела" to "कार्य और घरेलू काम", "Расписание и события" to "समय-सारणी और कार्यक्रम", "Открыть заметки" to "नोट्स खोलें",
+        "Документы и ИИ-помощник появятся в следующих этапах." to "दस्तावेज़ और AI सहायक भविष्य के अपडेट में आएँगे।",
+        "Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации." to "अभी यहाँ केवल स्थानीय सुविधाएँ उपलब्ध हैं। डिवाइस जोड़ने और सहायता अलर्ट के लिए सुरक्षित कार्यान्वयन चाहिए।",
+        "Посмотреть семейные дела" to "परिवार के कार्य देखें", "Общие дела" to "साझा कार्य",
+        "Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена." to "अभी कार्य इसी फ़ोन पर सहेजे जाते हैं। परिवार सिंक अभी जुड़ा नहीं है।",
+        "Что нужно сделать?" to "क्या करना है?", "Исполнитель (необязательно)" to "जिम्मेदार व्यक्ति (वैकल्पिक)", "Срок, например 20.10.2026" to "अंतिम तिथि, जैसे 20/10/2026",
+        "Приоритет" to "प्राथमिकता", "Низкий" to "कम", "Обычный" to "सामान्य", "Высокий" to "उच्च", "Добавить задачу" to "कार्य जोड़ें",
+        "Удалить" to "हटाएँ", "Кому" to "जिम्मेदार", "Срок" to "अंतिम तिथि", "Все" to "सभी", "Активные" to "सक्रिय", "Готовые" to "पूर्ण",
+        "Здесь появятся семейные задачи." to "परिवार के कार्य यहाँ दिखाई देंगे।", "В этом фильтре пока пусто." to "इस फ़िल्टर में अभी कुछ नहीं है।",
+        "Добавь дело выше или выбери другой фильтр." to "ऊपर कार्य जोड़ें या दूसरा फ़िल्टर चुनें।",
+        "Семейный календарь" to "परिवार कैलेंडर", "Локальные события, пока без системных напоминаний." to "स्थानीय कार्यक्रम; सिस्टम रिमाइंडर अभी उपलब्ध नहीं हैं।",
+        "Название события" to "कार्यक्रम का नाम", "Дата или время" to "तारीख या समय", "Сохранить событие" to "कार्यक्रम सहेजें",
+        "Пока нет событий." to "अभी कोई कार्यक्रम नहीं है।", "Добавь день рождения, встречу или семейный план." to "जन्मदिन, मुलाक़ात या परिवार की योजना जोड़ें।",
+        "Список покупок, домашние запасы и рецепты." to "खरीदारी सूची, घरेलू भंडार और रेसिपी।", "События" to "कार्यक्रम", "Открыть" to "खोलें",
+        "К календарю" to "कैलेंडर पर जाएँ", "Покупки" to "खरीदारी", "К списку" to "सूची खोलें", "Заметки" to "नोट्स", "Мои записи" to "मेरे नोट्स",
+        "Запасы" to "भंडार", "Рецепты" to "रेसिपी", "Добавить продукт" to "वस्तु जोड़ें", "Добавить в список" to "सूची में जोड़ें", "Убрать" to "हटाएँ",
+        "Список пока пуст." to "सूची अभी खाली है।", "Добавь продукты, которые нужно купить." to "खरीदने वाली चीज़ें जोड़ें।",
+        "Продукт дома" to "भंडार की वस्तु", "Срок годности (необязательно)" to "समाप्ति तिथि (वैकल्पिक)", "Добавить в запасы" to "भंडार में जोड़ें",
+        "Запасы ещё не заполнены." to "भंडार अभी खाली है।", "Добавь продукты и при желании укажи срок годности." to "वस्तुएँ जोड़ें और चाहें तो समाप्ति तिथि लिखें।",
+        "Овсяная каша с яблоком" to "सेब वाला ओटमील", "Овсяные хлопья, молоко или вода, яблоко. Свари хлопья и добавь нарезанное яблоко." to "ओट्स, दूध या पानी और सेब लें। ओट्स पकाएँ और कटा हुआ सेब मिलाएँ।",
+        "Овощной омлет" to "सब्ज़ियों का ऑमलेट", "Яйца, помидор, сладкий перец. Нарежь овощи, добавь яйца и готовь до полной готовности." to "अंडे, टमाटर और शिमला मिर्च लें। सब्ज़ियाँ काटें, अंडे डालें और अच्छी तरह पकाएँ।",
+        "Тёплый бутерброд с сыром" to "गर्म चीज़ सैंडविच", "Хлеб, сыр, по желанию помидор. Прогрей до расплавления сыра." to "ब्रेड, चीज़ और चाहें तो टमाटर लें। चीज़ पिघलने तक गर्म करें।",
+        "Автоматическое меню и расчёт ингредиентов пока не подключены." to "स्वचालित मेनू और सामग्री की गणना अभी उपलब्ध नहीं है।",
+        "Чат пока не подключён" to "चैट अभी जुड़ी नहीं है।",
+        "Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений." to "वास्तविक चैट के लिए परिवार खाते, सुरक्षित सिंक और संदेश सेवा चाहिए। यहाँ नकली सदस्य या संदेश नहीं दिखाए जाते।",
+        "Мои заметки" to "मेरे नोट्स", "Заголовок" to "शीर्षक", "Текст заметки" to "नोट का पाठ", "Сохранить заметку" to "नोट सहेजें",
+        "Поиск по заметкам" to "नोट्स खोजें", "Заметок пока нет." to "अभी कोई नोट नहीं है।", "Создай первую запись выше." to "ऊपर अपना पहला नोट बनाएँ।",
+        "Без названия" to "बिना शीर्षक", "Заметка сохранена" to "नोट सहेजा गया", "Заметка удалена" to "नोट हटाया गया", "Покупка сохранена" to "खरीदारी आइटम सहेजा गया",
+        "Список покупок сохранён" to "खरीदारी सूची सहेजी गई", "Покупка удалена" to "खरीदारी आइटम हटाया गया", "Продукт добавлен в запасы" to "वस्तु भंडार में जोड़ी गई",
+        "Задача сохранена" to "कार्य सहेजा गया", "Статус задачи сохранён" to "कार्य की स्थिति सहेजी गई", "Задача удалена" to "कार्य हटाया गया",
+        "Событие сохранено" to "कार्यक्रम सहेजा गया", "Событие удалено" to "कार्यक्रम हटाया गया", "Данные сохраняются на этом устройстве · синхронизации пока нет" to "डेटा इस डिवाइस पर सहेजा जाता है · सिंक अभी उपलब्ध नहीं है",
+        "Не указан" to "निर्दिष्ट नहीं", "Дата не указана" to "तारीख नहीं दी गई", "Имя не указано" to "नाम नहीं दिया गया",
+        "Всё для продуктов, покупок и приготовления еды." to "खाद्य सामग्री, खरीदारी और खाना बनाने के लिए सब कुछ।",
+        "Место для семейного общения и общих воспоминаний." to "परिवार की बातचीत और साझा यादों के लिए जगह।",
+        "Здесь можно планировать дела и семейное расписание." to "यहाँ काम और परिवार का समय तय करें।",
+        "Личные записи и документы — с приватностью по умолчанию." to "निजी नोट्स और दस्तावेज़, डिफ़ॉल्ट रूप से गोपनीय।",
+        "Быстрый доступ к семейным действиям и устройствам." to "परिवार के कार्यों और डिवाइस तक त्वरित पहुँच।",
+        "Откроется после подключения защищённой синхронизации" to "सुरक्षित सिंक चालू होने पर उपलब्ध होगा",
+        "Например, 12.05.1995" to "उदाहरण: 12/05/1995",
+        "Родитель" to "माता-पिता", "Ребёнок" to "बच्चा", "Другой" to "अन्य",
+        "Лаванда" to "लैवेंडर", "Шалфей" to "सेज", "Океан" to "समुद्र"
     )
 )
 
@@ -195,7 +380,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
     var status by remember { mutableStateOf("Данные сохраняются на этом устройстве · синхронизации пока нет") }
 
     Scaffold(
-        containerColor = Cream,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
                 Screen.entries.forEach { item ->
@@ -223,10 +408,10 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
                     Text(tr("Теплее вместе"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-                    Text(tr("v${BuildConfig.VERSION_NAME}"), Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    Text("v${BuildConfig.VERSION_NAME}", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 }
             }
-            HorizontalDivider(color = Color(0xFFE9E3F1))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             when {
                 notesOpen -> NotesScreen(
                     notes.filter { (it.title + " " + it.body).contains(search, true) }.sortedByDescending { it.updatedAt },
@@ -267,6 +452,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
                     onBack = { kitchenOpen = false }
                 )
                 screen == Screen.Home -> HomeScreen(
+                    goldTheme = themeName == "Obsidian Gold",
                     tasks.count { !it.done }, events.size, notes.size, shopping.count { !it.bought },
                     onOpenTasks = { screen = Screen.Tasks }, onOpenCalendar = { screen = Screen.Calendar },
                     onOpenNotes = { notesOpen = true }, onOpenKitchen = { kitchenOpen = true },
@@ -305,7 +491,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
                     onOpenSettings = { settingsOpen = true }
                 )
             }
-            Text(status, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+            Text(tr(status), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(3.dp))
         }
     }
@@ -313,7 +499,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
 
 @Composable
 private fun HomeScreen(
-    openTasksCount: Int, eventsCount: Int, notesCount: Int, shoppingCount: Int,
+    goldTheme: Boolean, openTasksCount: Int, eventsCount: Int, notesCount: Int, shoppingCount: Int,
     onOpenTasks: () -> Unit, onOpenCalendar: () -> Unit, onOpenNotes: () -> Unit,
     onOpenKitchen: () -> Unit, onOpenChat: () -> Unit, onOpenRoom: (String) -> Unit
 ) {
@@ -334,7 +520,7 @@ private fun HomeScreen(
                         }
                         Text(tr("✦"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
                     }
-                    AnimatedHouseIllustration()
+                    AnimatedHouseIllustration(goldTheme)
                     Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
                         RoomTile("Кухня", "Покупки · запасы", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
                         RoomTile("Гостиная", "Общение · память", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
@@ -370,52 +556,52 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun AnimatedHouseIllustration() {
+private fun AnimatedHouseIllustration(goldTheme: Boolean) {
     val motion = rememberInfiniteTransition(label = "houseAmbient")
     val glow by motion.animateFloat(0.38f, 0.92f, infiniteRepeatable(tween(2600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "windowGlow")
     val floatY by motion.animateFloat(0f, -1.5f, infiniteRepeatable(tween(3600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "houseFloat")
     Canvas(Modifier.fillMaxWidth().height(218.dp).offset(y = floatY.dp)) {
         val w = size.width; val h = size.height
         // Soft garden and pathway
-        drawOval(Color(0xFFD9D1EA), Offset(w*.07f,h*.77f), Size(w*.86f,h*.15f))
-        drawOval(Color(0xFFE7E0F1), Offset(w*.12f,h*.73f), Size(w*.76f,h*.12f))
+        drawOval(if (goldTheme) Color(0xFF171717) else Color(0xFFD9D1EA), Offset(w*.07f,h*.77f), Size(w*.86f,h*.15f))
+        drawOval(if (goldTheme) Color(0xFF202020) else Color(0xFFE7E0F1), Offset(w*.12f,h*.73f), Size(w*.76f,h*.12f))
         val left=w*.19f; val right=w*.81f; val top=h*.28f; val bottom=h*.78f
         // Main walls, slight side plane for depth
         val side=Path().apply { moveTo(right,top+h*.10f); lineTo(right+w*.07f,top+h*.16f); lineTo(right+w*.07f,bottom-h*.02f); lineTo(right,bottom); close() }
-        drawPath(side,Color(0xFFE8DCCB))
-        drawRect(Color(0xFFFFFAF1),Offset(left,top+h*.10f),Size(right-left,bottom-(top+h*.10f)))
+        drawPath(side,if (goldTheme) Color(0xFF171717) else Color(0xFFE8DCCB))
+        drawRect(if (goldTheme) Color(0xFF242424) else Color(0xFFFFFAF1),Offset(left,top+h*.10f),Size(right-left,bottom-(top+h*.10f)))
         // Roof with layered eaves and soft shadow
         val shadow=Path().apply { moveTo(left-w*.07f,top+h*.12f); lineTo(w*.50f,top-h*.20f); lineTo(right+w*.07f,top+h*.12f); lineTo(right+w*.04f,top+h*.16f); lineTo(w*.50f,top-h*.15f); lineTo(left-w*.04f,top+h*.16f); close() }
-        drawPath(shadow,Color(0xFF6D5A9B).copy(alpha=.16f))
+        drawPath(shadow,(if (goldTheme) Color(0xFFD4AF37) else Color(0xFF6D5A9B)).copy(alpha=.16f))
         val roof=Path().apply { moveTo(left-w*.075f,top+h*.12f); lineTo(w*.50f,top-h*.23f); lineTo(right+w*.075f,top+h*.12f); close() }
-        drawPath(roof,Color(0xFF8D7ABD))
-        drawPath(roof,Color(0xFF6D5A9B),style=Stroke(width=2.4.dp.toPx()))
-        drawLine(Color(0xFFB8A6D8),Offset(w*.50f,top-h*.19f),Offset(w*.50f,top+h*.10f),strokeWidth=1.3.dp.toPx())
+        drawPath(roof,if (goldTheme) Color(0xFF0B0B0B) else Color(0xFF8D7ABD))
+        drawPath(roof,if (goldTheme) Color(0xFFD4AF37) else Color(0xFF6D5A9B),style=Stroke(width=2.4.dp.toPx()))
+        drawLine(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB8A6D8),Offset(w*.50f,top-h*.19f),Offset(w*.50f,top+h*.10f),strokeWidth=1.3.dp.toPx())
         // Interior dividers make the rooms legible at a glance
-        drawLine(Color(0xFFE0D4C4),Offset(w*.50f,top+h*.10f),Offset(w*.50f,bottom),strokeWidth=3.dp.toPx())
-        drawLine(Color(0xFFE0D4C4),Offset(left,h*.55f),Offset(right,h*.55f),strokeWidth=3.dp.toPx())
+        drawLine(if (goldTheme) Color(0xFF5B4A20) else Color(0xFFE0D4C4),Offset(w*.50f,top+h*.10f),Offset(w*.50f,bottom),strokeWidth=3.dp.toPx())
+        drawLine(if (goldTheme) Color(0xFF5B4A20) else Color(0xFFE0D4C4),Offset(left,h*.55f),Offset(right,h*.55f),strokeWidth=3.dp.toPx())
         // Four distinct room windows / room lights
         val windows=listOf(
-            Triple(Offset(w*.29f,h*.43f),Color(0xFFF0D58E),true),
-            Triple(Offset(w*.59f,h*.43f),Color(0xFFC9DDCF),false),
-            Triple(Offset(w*.29f,h*.61f),Color(0xFFF0D58E),true),
-            Triple(Offset(w*.59f,h*.61f),Color(0xFFC9DDCF),false)
+            Triple(Offset(w*.29f,h*.43f),if (goldTheme) Color(0xFFFFD86B) else Color(0xFFF0D58E),true),
+            Triple(Offset(w*.59f,h*.43f),if (goldTheme) Color(0xFFD4AF37) else Color(0xFFC9DDCF),false),
+            Triple(Offset(w*.29f,h*.61f),if (goldTheme) Color(0xFFFFD86B) else Color(0xFFF0D58E),true),
+            Triple(Offset(w*.59f,h*.61f),if (goldTheme) Color(0xFFD4AF37) else Color(0xFFC9DDCF),false)
         )
         windows.forEachIndexed { i, item ->
             val p=item.first; val base=item.second
-            drawRoundRect(Color(0xFFB6A3D1),Offset(p.x-2.dp.toPx(),p.y-2.dp.toPx()),Size(w*.105f+4.dp.toPx(),h*.105f+4.dp.toPx()),androidx.compose.ui.geometry.CornerRadius(7f))
+            drawRoundRect(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB6A3D1),Offset(p.x-2.dp.toPx(),p.y-2.dp.toPx()),Size(w*.105f+4.dp.toPx(),h*.105f+4.dp.toPx()),androidx.compose.ui.geometry.CornerRadius(7f))
             drawRoundRect(base.copy(alpha=if(item.third) glow else .9f),p,Size(w*.105f,h*.105f),androidx.compose.ui.geometry.CornerRadius(5f))
-            drawLine(Color(0xFFFFF9EF),Offset(p.x+w*.052f,p.y),Offset(p.x+w*.052f,p.y+h*.105f),strokeWidth=1.2.dp.toPx())
-            drawLine(Color(0xFFFFF9EF),Offset(p.x,p.y+h*.052f),Offset(p.x+w*.105f,p.y+h*.052f),strokeWidth=1.2.dp.toPx())
+            drawLine(if (goldTheme) Color(0xFFFFE8A3) else Color(0xFFFFF9EF),Offset(p.x+w*.052f,p.y),Offset(p.x+w*.052f,p.y+h*.105f),strokeWidth=1.2.dp.toPx())
+            drawLine(if (goldTheme) Color(0xFFFFE8A3) else Color(0xFFFFF9EF),Offset(p.x,p.y+h*.052f),Offset(p.x+w*.105f,p.y+h*.052f),strokeWidth=1.2.dp.toPx())
         }
         // Welcoming door and path
-        drawRoundRect(Color(0xFFB69A80),Offset(w*.445f,h*.63f),Size(w*.11f,h*.15f),androidx.compose.ui.geometry.CornerRadius(6f))
+        drawRoundRect(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB69A80),Offset(w*.445f,h*.63f),Size(w*.11f,h*.15f),androidx.compose.ui.geometry.CornerRadius(6f))
         drawCircle(Color(0xFFFFE7A8),2.5.dp.toPx(),Offset(w*.53f,h*.71f))
         val path=Path().apply { moveTo(w*.46f,h*.78f); lineTo(w*.37f,h*.94f); lineTo(w*.63f,h*.94f); lineTo(w*.54f,h*.78f); close() }
-        drawPath(path,Color(0xFFF6EBDD))
+        drawPath(path,if (goldTheme) Color(0xFF191919) else Color(0xFFF6EBDD))
         // Fireflies / ambient dots
-        drawCircle(Color(0xFF9D8AC8).copy(alpha=glow),3.dp.toPx(),Offset(w*.12f,h*.55f))
-        drawCircle(Color(0xFF9D8AC8).copy(alpha=.5f),2.dp.toPx(),Offset(w*.87f,h*.50f))
+        drawCircle((if (goldTheme) Color(0xFFD4AF37) else Color(0xFF9D8AC8)).copy(alpha=glow),3.dp.toPx(),Offset(w*.12f,h*.55f))
+        drawCircle((if (goldTheme) Color(0xFFD4AF37) else Color(0xFF9D8AC8)).copy(alpha=.5f),2.dp.toPx(),Offset(w*.87f,h*.50f))
         drawCircle(Color(0xFFE5C87D).copy(alpha=glow),2.dp.toPx(),Offset(w*.79f,h*.68f))
     }
 }
@@ -427,8 +613,8 @@ private fun RoomTile(title: String, subtitle: String, symbol: String, modifier: 
             Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(13.dp)), contentAlignment = Alignment.Center) {
                 Text(symbol, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
             }
-            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
+            Text(tr(title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(tr(subtitle), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -445,7 +631,7 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
     }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(room, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            Text(tr(room), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             TextButton(onClick = onBack) { Text(tr("← Домой")) }
         }
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
@@ -454,7 +640,7 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
                     Text(symbol, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
                 }
                 Text(tr("Добро пожаловать"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Text(intro)
+                Text(tr(intro))
             }
         }
         when (room) {
@@ -486,7 +672,7 @@ private fun SummaryCard(title: String, value: String, subtitle: String, modifier
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(tr(title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Text(value, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
+            Text(tr(subtitle), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -499,8 +685,8 @@ private fun FeatureCard(title: String, description: String, symbol: String, onCl
                 Text(symbol, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(description, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
+                Text(tr(title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(tr(description), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text(tr("›"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
         }
@@ -529,20 +715,20 @@ private fun TasksScreen(
         Text(tr("Приоритет"), style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf("Низкий", "Обычный", "Высокий").forEach { value ->
-                if (priority == value) Button(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
+                if (priority == value) Button(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(tr(value)) }
                 else OutlinedButton(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
             }
         }
         Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text(tr("Добавить задачу")) }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf("Все", "Активные", "Готовые").forEach { value ->
-                if (filter == value) Button(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(value) }
-                else OutlinedButton(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(value) }
+                if (filter == value) Button(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(tr(value)) }
+                else OutlinedButton(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(tr(value)) }
             }
         }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(shown, key = { it.id }) { task ->
-                Card(colors = CardDefaults.cardColors(containerColor = if (task.done) Sage else MaterialTheme.colorScheme.surface)) {
+                Card(colors = CardDefaults.cardColors(containerColor = if (task.done) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)) {
                     Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(task.done, { onToggle(task) })
@@ -550,9 +736,9 @@ private fun TasksScreen(
                             TextButton(onClick = { onRemove(task) }) { Text(tr("Удалить")) }
                         }
                         val details = listOfNotNull(
-                            task.assignee.takeIf { it.isNotBlank() }?.let { "Кому: $it" },
-                            task.dueDate.takeIf { it.isNotBlank() }?.let { "Срок: $it" },
-                            "Приоритет: ${task.priority}"
+                            task.assignee.takeIf { it.isNotBlank() }?.let { "${tr("Кому")}: $it" },
+                            task.dueDate.takeIf { it.isNotBlank() }?.let { "${tr("Срок")}: $it" },
+                            "${tr("Приоритет")}: ${tr(task.priority)}"
                         )
                         Text(details.joinToString("  ·  "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
                     }
@@ -606,8 +792,8 @@ private fun KitchenScreen(
         Text(tr("Список покупок, домашние запасы и рецепты."))
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             listOf("Покупки", "Запасы", "Рецепты").forEach { name ->
-                if (tab == name) Button(onClick = { tab = name }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp)) { Text(name) }
-                else OutlinedButton(onClick = { tab = name }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp)) { Text(name) }
+                if (tab == name) Button(onClick = { tab = name }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp)) { Text(tr(name)) }
+                else OutlinedButton(onClick = { tab = name }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp)) { Text(tr(name)) }
             }
         }
         when (tab) {
@@ -637,7 +823,7 @@ private fun KitchenScreen(
                             Row(Modifier.fillMaxWidth().padding(11.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
                                     Text(item.title, fontWeight = FontWeight.SemiBold)
-                                    Text(tr("Срок: ${item.expiry}"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                    Text("${tr("Срок")}: ${item.expiry}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                                 }
                                 TextButton(onClick = { onRemovePantry(item) }) { Text(tr("Убрать")) }
                             }
@@ -660,8 +846,8 @@ private fun KitchenScreen(
 private fun RecipeCard(title: String, description: String) {
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.fillMaxWidth().padding(13.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Text(description, style = MaterialTheme.typography.bodyMedium)
+            Text(tr(title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(tr(description), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -693,7 +879,7 @@ private fun ProfileScreen(
                         Text(name.trim().firstOrNull()?.uppercase() ?: "?", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                     Column {
-                        Text(name.ifBlank { "Имя не указано" }, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Text(name.ifBlank { tr("Имя не указано") }, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                         Text(tr("Локальный профиль"), color = MaterialTheme.colorScheme.primary)
                     }
                 }
@@ -706,8 +892,8 @@ private fun ProfileScreen(
                 Text(tr("Роль в семье"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     listOf("Родитель", "Ребёнок", "Другой").forEach { value ->
-                        if (role == value) Button(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(value) }
-                        else OutlinedButton(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(value) }
+                        if (role == value) Button(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(tr(value)) }
+                        else OutlinedButton(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(tr(value)) }
                     }
                 }
             }
@@ -733,8 +919,8 @@ private fun SettingsScreen(themeName: String, onTheme: (String) -> Unit, languag
         }
         Text(tr("Тема оформления"))
         listOf("Лаванда", "Шалфей", "Океан", "Obsidian Gold").forEach { name ->
-            if (themeName == name) Button(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
-            else OutlinedButton(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
+            if (themeName == name) Button(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(tr(name)) }
+            else OutlinedButton(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(tr(name)) }
         }
         Text(tr("Выбор темы сохраняется на этом устройстве."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
         HorizontalDivider()
@@ -762,7 +948,7 @@ private fun NotesScreen(
         OutlinedTextField(body, onBody, Modifier.fillMaxWidth(), label = { Text(tr("Текст заметки")) }, minLines = 2)
         Button(onClick = onAddNote, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text(tr("Сохранить заметку")) }
         OutlinedTextField(search, onSearch, Modifier.fillMaxWidth(), label = { Text(tr("Поиск по заметкам")) }, singleLine = true)
-        Text(tr("Заметки · ${notes.size}"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        Text("${tr("Заметки")} · ${notes.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(notes, key = { it.id }) { note ->
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
