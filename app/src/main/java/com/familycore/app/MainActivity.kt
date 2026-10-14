@@ -74,6 +74,11 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
     val context = LocalContext.current
     var screen by remember { mutableStateOf(Screen.Home) }
     var kitchenOpen by remember { mutableStateOf(false) }
+    var notesOpen by remember { mutableStateOf(false) }
+    var settingsOpen by remember { mutableStateOf(false) }
+    var profileName by remember { mutableStateOf(LocalStore.loadProfileName(context)) }
+    var profileBirthday by remember { mutableStateOf(LocalStore.loadProfileBirthday(context)) }
+    var profileRole by remember { mutableStateOf(LocalStore.loadProfileRole(context)) }
     val notes = remember { mutableStateListOf<Note>().apply { addAll(LocalStore.loadNotes(context)) } }
     val tasks = remember { mutableStateListOf<FamilyTask>().apply { addAll(LocalStore.loadTasks(context)) } }
     val events = remember { mutableStateListOf<FamilyEvent>().apply { addAll(LocalStore.loadEvents(context)) } }
@@ -97,7 +102,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                 Screen.entries.forEach { item ->
                     NavigationBarItem(
                         selected = screen == item && !kitchenOpen,
-                        onClick = { screen = item; kitchenOpen = false },
+                        onClick = { screen = item; kitchenOpen = false; notesOpen = false; settingsOpen = false },
                         icon = { Text(item.symbol, style = MaterialTheme.typography.titleMedium) },
                         label = { Text(item.label, maxLines = 1) }
                     )
@@ -124,6 +129,19 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
             }
             HorizontalDivider(color = Color(0xFFE9E3F1))
             when {
+                notesOpen -> NotesScreen(
+                    notes.filter { (it.title + " " + it.body).contains(search, true) }.sortedByDescending { it.updatedAt },
+                    noteTitle, { noteTitle = it }, noteBody, { noteBody = it }, search, { search = it },
+                    onAddNote = {
+                        if (noteTitle.isNotBlank() || noteBody.isNotBlank()) {
+                            notes.add(Note(UUID.randomUUID().toString(), noteTitle.trim().ifBlank { "Без названия" }, noteBody.trim(), System.currentTimeMillis()))
+                            LocalStore.saveNotes(context, notes); noteTitle = ""; noteBody = ""; status = "Заметка сохранена"
+                        }
+                    },
+                    onDeleteNote = { item -> notes.remove(item); LocalStore.saveNotes(context, notes); status = "Заметка удалена" },
+                    onBack = { notesOpen = false }
+                )
+                settingsOpen -> SettingsScreen(themeName, onThemeChanged, onBack = { settingsOpen = false })
                 kitchenOpen -> KitchenScreen(
                     shopping, pantry, shoppingTitle, { shoppingTitle = it }, pantryTitle, { pantryTitle = it },
                     pantryExpiry, { pantryExpiry = it },
@@ -151,7 +169,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                 screen == Screen.Home -> HomeScreen(
                     tasks.count { !it.done }, events.size, notes.size, shopping.count { !it.bought },
                     onOpenTasks = { screen = Screen.Tasks }, onOpenCalendar = { screen = Screen.Calendar },
-                    onOpenNotes = { screen = Screen.Profile }, onOpenKitchen = { kitchenOpen = true },
+                    onOpenNotes = { notesOpen = true }, onOpenKitchen = { kitchenOpen = true },
                     onOpenChat = { screen = Screen.Chat }
                 )
                 screen == Screen.Tasks -> TasksScreen(
@@ -181,16 +199,10 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                 )
                 screen == Screen.Chat -> ChatScreen()
                 screen == Screen.Profile -> ProfileScreen(
-                    notes.filter { (it.title + " " + it.body).contains(search, true) }.sortedByDescending { it.updatedAt },
-                    noteTitle, { noteTitle = it }, noteBody, { noteBody = it }, search, { search = it },
-                    themeName, onThemeChanged,
-                    onAddNote = {
-                        if (noteTitle.isNotBlank() || noteBody.isNotBlank()) {
-                            notes.add(Note(UUID.randomUUID().toString(), noteTitle.trim().ifBlank { "Без названия" }, noteBody.trim(), System.currentTimeMillis()))
-                            LocalStore.saveNotes(context, notes); noteTitle = ""; noteBody = ""; status = "Заметка сохранена"
-                        }
-                    },
-                    onDeleteNote = { item -> notes.remove(item); LocalStore.saveNotes(context, notes); status = "Заметка удалена" }
+                    profileName, { profileName = it; LocalStore.saveProfileName(context, it) },
+                    profileBirthday, { profileBirthday = it; LocalStore.saveProfileBirthday(context, it) },
+                    profileRole, { profileRole = it; LocalStore.saveProfileRole(context, it) },
+                    onOpenSettings = { settingsOpen = true }
                 )
             }
             Text(status, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
@@ -401,39 +413,93 @@ private fun ChatScreen() {
 
 @Composable
 private fun ProfileScreen(
-    notes: List<Note>, title: String, onTitle: (String) -> Unit, body: String, onBody: (String) -> Unit,
-    search: String, onSearch: (String) -> Unit, themeName: String, onTheme: (String) -> Unit,
-    onAddNote: () -> Unit, onDeleteNote: (Note) -> Unit
+    name: String, onName: (String) -> Unit, birthday: String, onBirthday: (String) -> Unit,
+    role: String, onRole: (String) -> Unit, onOpenSettings: () -> Unit
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(9.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
-        item { Text("Профиль и заметки", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) }
-        item { Text("Локальный профиль без аккаунта и семейной синхронизации.") }
-        item { Text("Тема оформления", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold) }
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
+        item { Text("Мой профиль", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                listOf("Лаванда", "Шалфей", "Океан").forEach { name ->
-                    if (themeName == name) Button(onClick = { onTheme(name) }, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 7.dp)) { Text(name) }
-                    else OutlinedButton(onClick = { onTheme(name) }, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 7.dp)) { Text(name) }
+            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(22.dp)) {
+                Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Box(Modifier.size(64.dp).background(Color.White, RoundedCornerShape(22.dp)), contentAlignment = Alignment.Center) {
+                        Text(name.trim().firstOrNull()?.uppercase() ?: "?", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    }
+                    Column {
+                        Text(name.ifBlank { "Имя не указано" }, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Text("Локальный профиль", color = MaterialTheme.colorScheme.primary)
+                    }
                 }
             }
         }
-        item { Text("Новая заметка", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold) }
-        item { OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Заголовок") }, singleLine = true) }
-        item { OutlinedTextField(body, onBody, Modifier.fillMaxWidth(), label = { Text("Текст заметки") }, minLines = 2) }
-        item { Button(onClick = onAddNote, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text("Сохранить заметку") } }
-        item { OutlinedTextField(search, onSearch, Modifier.fillMaxWidth(), label = { Text("Поиск по заметкам") }, singleLine = true) }
-        item { Text("Мои заметки · ${notes.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold) }
-        items(notes, key = { it.id }) { note ->
-            Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
-                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(note.title, fontWeight = FontWeight.Bold)
-                    if (note.body.isNotBlank()) Text(note.body)
-                    Text(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(note.updatedAt)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                    TextButton(onClick = { onDeleteNote(note) }) { Text("Удалить") }
+        item { OutlinedTextField(name, onName, Modifier.fillMaxWidth(), label = { Text("Имя") }, singleLine = true) }
+        item { OutlinedTextField(birthday, onBirthday, Modifier.fillMaxWidth(), label = { Text("Дата рождения") }, placeholder = { Text("Например, 12.05.1995") }, singleLine = true) }
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Роль в семье", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    listOf("Родитель", "Ребёнок", "Другой").forEach { value ->
+                        if (role == value) Button(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(value) }
+                        else OutlinedButton(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(value) }
+                    }
                 }
             }
         }
-        if (notes.isEmpty()) item { EmptyState("Заметок пока нет.", "Создай первую запись выше.") }
+        item {
+            Surface(color = Color.White, shape = RoundedCornerShape(18.dp)) {
+                Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text("Аккаунт не подключён", fontWeight = FontWeight.SemiBold)
+                    Text("Профиль хранится только на этом устройстве. Семейная синхронизация пока не работает.", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+        item { OutlinedButton(onClick = onOpenSettings, modifier = Modifier.fillMaxWidth()) { Text("Настройки приложения") } }
+    }
+}
+
+@Composable
+private fun SettingsScreen(themeName: String, onTheme: (String) -> Unit, onBack: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Настройки", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text("← Назад") }
+        }
+        Text("Тема оформления")
+        listOf("Лаванда", "Шалфей", "Океан").forEach { name ->
+            if (themeName == name) Button(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
+            else OutlinedButton(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
+        }
+        Text("Выбор темы сохраняется на этом устройстве.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+    }
+}
+
+@Composable
+private fun NotesScreen(
+    notes: List<Note>, title: String, onTitle: (String) -> Unit, body: String, onBody: (String) -> Unit,
+    search: String, onSearch: (String) -> Unit, onAddNote: () -> Unit, onDeleteNote: (Note) -> Unit, onBack: () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Мои заметки", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text("← Назад") }
+        }
+        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Заголовок") }, singleLine = true)
+        OutlinedTextField(body, onBody, Modifier.fillMaxWidth(), label = { Text("Текст заметки") }, minLines = 2)
+        Button(onClick = onAddNote, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text("Сохранить заметку") }
+        OutlinedTextField(search, onSearch, Modifier.fillMaxWidth(), label = { Text("Поиск по заметкам") }, singleLine = true)
+        Text("Заметки · ${notes.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(notes, key = { it.id }) { note ->
+                Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                    Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(note.title, fontWeight = FontWeight.Bold)
+                        if (note.body.isNotBlank()) Text(note.body)
+                        Text(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(note.updatedAt)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                        TextButton(onClick = { onDeleteNote(note) }) { Text("Удалить") }
+                    }
+                }
+            }
+            if (notes.isEmpty()) item { EmptyState("Заметок пока нет.", "Создай первую запись выше.") }
+        }
     }
 }
 
@@ -469,6 +535,12 @@ private object LocalStore {
     fun saveShopping(c: Context, list: List<ShoppingItem>) = save(c, "shopping", list.map { JSONObject().put("id", it.id).put("title", it.title).put("bought", it.bought) })
     fun loadPantry(c: Context): List<PantryItem> = decode(c, "pantry") { PantryItem(it.str("id"), it.str("title"), it.str("expiry")) }
     fun savePantry(c: Context, list: List<PantryItem>) = save(c, "pantry", list.map { JSONObject().put("id", it.id).put("title", it.title).put("expiry", it.expiry) })
+    fun loadProfileName(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("profile_name", "") ?: ""
+    fun saveProfileName(c: Context, value: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("profile_name", value).apply() }
+    fun loadProfileBirthday(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("profile_birthday", "") ?: ""
+    fun saveProfileBirthday(c: Context, value: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("profile_birthday", value).apply() }
+    fun loadProfileRole(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("profile_role", "Родитель") ?: "Родитель"
+    fun saveProfileRole(c: Context, value: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("profile_role", value).apply() }
     fun loadTheme(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("theme", "Лаванда") ?: "Лаванда"
     fun saveTheme(c: Context, name: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("theme", name).apply() }
     private fun <T> decode(c: Context, key: String, convert: (JSONObject) -> T): List<T> {
