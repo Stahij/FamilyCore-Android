@@ -74,6 +74,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
     val context = LocalContext.current
     var screen by remember { mutableStateOf(Screen.Home) }
     var kitchenOpen by remember { mutableStateOf(false) }
+    var roomOpen by remember { mutableStateOf<String?>(null) }
     var notesOpen by remember { mutableStateOf(false) }
     var settingsOpen by remember { mutableStateOf(false) }
     var profileName by remember { mutableStateOf(LocalStore.loadProfileName(context)) }
@@ -102,7 +103,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                 Screen.entries.forEach { item ->
                     NavigationBarItem(
                         selected = screen == item && !kitchenOpen,
-                        onClick = { screen = item; kitchenOpen = false; notesOpen = false; settingsOpen = false },
+                        onClick = { screen = item; kitchenOpen = false; roomOpen = null; notesOpen = false; settingsOpen = false },
                         icon = { Text(item.symbol, style = MaterialTheme.typography.titleMedium) },
                         label = { Text(item.label, maxLines = 1) }
                     )
@@ -142,6 +143,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     onBack = { notesOpen = false }
                 )
                 settingsOpen -> SettingsScreen(themeName, onThemeChanged, onBack = { settingsOpen = false })
+                roomOpen != null -> RoomScreen(room = roomOpen!!, onBack = { roomOpen = null }, onKitchen = { roomOpen = null; kitchenOpen = true }, onTasks = { roomOpen = null; screen = Screen.Tasks }, onCalendar = { roomOpen = null; screen = Screen.Calendar }, onNotes = { roomOpen = null; notesOpen = true }, onChat = { roomOpen = null; screen = Screen.Chat })
                 kitchenOpen -> KitchenScreen(
                     shopping, pantry, shoppingTitle, { shoppingTitle = it }, pantryTitle, { pantryTitle = it },
                     pantryExpiry, { pantryExpiry = it },
@@ -170,7 +172,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     tasks.count { !it.done }, events.size, notes.size, shopping.count { !it.bought },
                     onOpenTasks = { screen = Screen.Tasks }, onOpenCalendar = { screen = Screen.Calendar },
                     onOpenNotes = { notesOpen = true }, onOpenKitchen = { kitchenOpen = true },
-                    onOpenChat = { screen = Screen.Chat }
+                    onOpenChat = { screen = Screen.Chat }, onOpenRoom = { roomOpen = it }
                 )
                 screen == Screen.Tasks -> TasksScreen(
                     tasks, taskTitle, { taskTitle = it },
@@ -215,7 +217,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
 private fun HomeScreen(
     openTasksCount: Int, eventsCount: Int, notesCount: Int, shoppingCount: Int,
     onOpenTasks: () -> Unit, onOpenCalendar: () -> Unit, onOpenNotes: () -> Unit,
-    onOpenKitchen: () -> Unit, onOpenChat: () -> Unit
+    onOpenKitchen: () -> Unit, onOpenChat: () -> Unit, onOpenRoom: (String) -> Unit
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
         item {
@@ -240,11 +242,87 @@ private fun HomeScreen(
                 SummaryCard("Заметки", notesCount.toString(), "Мои записи", Modifier.weight(1f), onOpenNotes)
             }
         }
-        item { Text("Комнаты FamilyCore", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-        item { FeatureCard("Кухня", "Покупки, запасы и рецепты", "⌂", onOpenKitchen) }
+        item { Text("Наш дом", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
+        item {
+            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
+                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Коснись комнаты, чтобы войти", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        RoomTile("Кухня", "Покупки", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
+                        RoomTile("Гостиная", "Общение", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        RoomTile("Детская", "Задачи", "☆", Modifier.weight(1f)) { onOpenRoom("Детская") }
+                        RoomTile("Кабинет", "Заметки", "▤", Modifier.weight(1f)) { onOpenRoom("Кабинет") }
+                    }
+                    RoomTile("Прихожая", "Быстрые действия и устройства", "⌂", Modifier.fillMaxWidth()) { onOpenRoom("Прихожая") }
+                }
+            }
+        }
+        item { Text("Быстрый доступ", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
         item { FeatureCard("Общие дела", "Планируй и отмечай выполненное", "✓", onOpenTasks) }
         item { FeatureCard("Календарь", "Храни важные даты и события", "▦", onOpenCalendar) }
         item { FeatureCard("Семейный чат", "Будет доступен после подключения синхронизации", "♡", onOpenChat) }
+    }
+}
+
+@Composable
+private fun RoomTile(title: String, subtitle: String, symbol: String, modifier: Modifier, onClick: () -> Unit) {
+    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+        Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(13.dp)), contentAlignment = Alignment.Center) {
+                Text(symbol, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
+            }
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
+        }
+    }
+}
+
+@Composable
+private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, onTasks: () -> Unit, onCalendar: () -> Unit, onNotes: () -> Unit, onChat: () -> Unit) {
+    val symbol = when (room) { "Кухня" -> "⌂"; "Гостиная" -> "♡"; "Детская" -> "☆"; "Кабинет" -> "▤"; else -> "⌂" }
+    val intro = when (room) {
+        "Кухня" -> "Всё для продуктов, покупок и приготовления еды."
+        "Гостиная" -> "Место для семейного общения и общих воспоминаний."
+        "Детская" -> "Здесь можно планировать дела и семейное расписание."
+        "Кабинет" -> "Личные записи и документы — с приватностью по умолчанию."
+        else -> "Быстрый доступ к семейным действиям и устройствам."
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(room, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text("← Домой") }
+        }
+        Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
+            Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Box(Modifier.size(62.dp).background(Color.White, RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
+                    Text(symbol, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
+                }
+                Text("Добро пожаловать", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(intro)
+            }
+        }
+        when (room) {
+            "Кухня" -> Button(onClick = onKitchen, modifier = Modifier.fillMaxWidth()) { Text("Открыть покупки и запасы") }
+            "Гостиная" -> {
+                Button(onClick = onChat, modifier = Modifier.fillMaxWidth()) { Text("Семейный чат") }
+                OutlinedButton(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text("Заметки и воспоминания") }
+                Text("Чат подключится после настройки серверной синхронизации.", style = MaterialTheme.typography.bodySmall)
+            }
+            "Детская" -> {
+                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text("Задачи и домашние дела") }
+                OutlinedButton(onClick = onCalendar, modifier = Modifier.fillMaxWidth()) { Text("Расписание и события") }
+            }
+            "Кабинет" -> {
+                Button(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text("Открыть заметки") }
+                Text("Документы и ИИ-помощник появятся в следующих этапах.", style = MaterialTheme.typography.bodySmall)
+            }
+            else -> {
+                Text("Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации.")
+                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text("Посмотреть семейные дела") }
+            }
+        }
     }
 }
 
