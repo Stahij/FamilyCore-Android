@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,76 @@ import java.util.UUID
 private val Ink = Color(0xFF302B3D)
 private val Cream = Color(0xFFFFFBF5)
 private val Sage = Color(0xFFE8F1E8)
+private val LocalAppLanguage = staticCompositionLocalOf { "Русский" }
+
+@Composable
+private fun tr(value: String): String = translations[LocalAppLanguage.current]?.get(value) ?: value
+
+private val translations: Map<String, Map<String, String>> = mapOf(
+    "English" to mapOf(
+        "Дом" to "Home", "Задачи" to "Tasks", "Календарь" to "Calendar", "Чат" to "Chat", "Профиль" to "Profile",
+        "Теплее вместе" to "Closer together", "Добро пожаловать домой" to "Welcome home", "Место, где собирается ваша семья" to "A place for your family",
+        "Наш дом" to "Our home", "Выбери комнату, чтобы войти" to "Choose a room to enter", "Кухня" to "Kitchen", "Гостиная" to "Living room",
+        "Детская" to "Kids’ room", "Кабинет" to "Study", "Прихожая" to "Entryway", "Покупки · запасы" to "Shopping · pantry",
+        "Общение · память" to "Chat · memories", "Задачи · распорядок" to "Tasks · routine", "Заметки · идеи" to "Notes · ideas",
+        "Быстрые действия и устройства" to "Quick actions and devices", "Домашние дела" to "Household", "Все разделы внизу" to "Sections below",
+        "Семейный чат" to "Family chat", "Откроется после подключения защищённой синхронизации" to "Available after secure sync is connected",
+        "Мой профиль" to "My profile", "Имя не указано" to "Name not set", "Локальный профиль" to "Local profile", "Имя" to "Name",
+        "Дата рождения" to "Date of birth", "Например, 12.05.1995" to "For example, 12/05/1995", "Роль в семье" to "Family role",
+        "Родитель" to "Parent", "Ребёнок" to "Child", "Другой" to "Other", "Аккаунт не подключён" to "Account not connected",
+        "Профиль хранится только на этом устройстве. Семейная синхронизация пока не работает." to "Your profile is stored on this device. Family sync is not available yet.",
+        "Настройки приложения" to "App settings", "Настройки" to "Settings", "← Назад" to "← Back", "Тема оформления" to "Appearance theme",
+        "Лаванда" to "Lavender", "Шалфей" to "Sage", "Океан" to "Ocean", "Выбор темы сохраняется на этом устройстве." to "Your theme choice is saved on this device.",
+        "Язык приложения" to "App language", "Русский" to "Russian", "English" to "English", "中文（简体）" to "Chinese (Simplified)",
+        "Español" to "Spanish", "हिन्दी" to "Hindi", "Obsidian Gold" to "Obsidian Gold", "Тема сохраняется только на этом устройстве." to "Theme is saved on this device.",
+        "Выбор языка сохраняется на этом устройстве." to "Language is saved on this device.", "Задача сохранена" to "Task saved", "Событие сохранено" to "Event saved",
+        "Заметка сохранена" to "Note saved", "Заметка удалена" to "Note deleted", "Покупка сохранена" to "Shopping item saved", "Продукт добавлен в запасы" to "Item added to pantry",
+        "Данные сохраняются на этом устройстве · синхронизации пока нет" to "Data is stored on this device · sync is not available yet",
+        "Список покупок сохранён" to "Shopping list saved", "Покупка удалена" to "Shopping item removed", "Статус задачи сохранён" to "Task status saved"
+    ),
+    "中文（简体）" to mapOf(
+        "Дом" to "首页", "Задачи" to "任务", "Календарь" to "日历", "Чат" to "聊天", "Профиль" to "个人资料",
+        "Теплее вместе" to "让家人更亲近", "Добро пожаловать домой" to "欢迎回家", "Место, где собирается ваша семья" to "家人相聚的地方",
+        "Наш дом" to "我们的家", "Выбери комнату, чтобы войти" to "选择一个房间进入", "Кухня" to "厨房", "Гостиная" to "客厅",
+        "Детская" to "儿童房", "Кабинет" to "书房", "Прихожая" to "门厅", "Покупки · запасы" to "购物 · 储物",
+        "Общение · память" to "交流 · 回忆", "Задачи · распорядок" to "任务 · 日程", "Заметки · идеи" to "笔记 · 想法",
+        "Быстрые действия и устройства" to "快捷操作与设备", "Домашние дела" to "家庭事务", "Все разделы внизу" to "更多栏目在下方",
+        "Семейный чат" to "家庭聊天", "Мой профиль" to "我的资料", "Имя не указано" to "未填写姓名", "Локальный профиль" to "本地资料",
+        "Имя" to "姓名", "Дата рождения" to "出生日期", "Роль в семье" to "家庭角色", "Родитель" to "家长", "Ребёнок" to "孩子", "Другой" to "其他",
+        "Аккаунт не подключён" to "账号尚未连接", "Настройки приложения" to "应用设置", "Настройки" to "设置", "← Назад" to "← 返回",
+        "Тема оформления" to "外观主题", "Лаванда" to "薰衣草", "Шалфей" to "鼠尾草", "Океан" to "海洋", "Язык приложения" to "应用语言",
+        "Русский" to "俄语", "English" to "英语", "中文（简体）" to "简体中文", "Español" to "西班牙语", "हिन्दी" to "印地语",
+        "Выбор темы сохраняется на этом устройстве." to "主题选择保存在本设备上。", "Выбор языка сохраняется на этом устройстве。" to "语言选择保存在本设备上。"
+    ),
+    "Español" to mapOf(
+        "Дом" to "Inicio", "Задачи" to "Tareas", "Календарь" to "Calendario", "Чат" to "Chat", "Профиль" to "Perfil",
+        "Теплее вместе" to "Más unidos", "Добро пожаловать домой" to "Bienvenido a casa", "Место, где собирается ваша семья" to "Un lugar para toda la familia",
+        "Наш дом" to "Nuestro hogar", "Выбери комнату, чтобы войти" to "Elige una habitación", "Кухня" to "Cocina", "Гостиная" to "Sala de estar",
+        "Детская" to "Habitación infantil", "Кабинет" to "Despacho", "Прихожая" to "Entrada", "Покупки · запасы" to "Compras · despensa",
+        "Общение · память" to "Conversación · recuerdos", "Задачи · распорядок" to "Tareas · rutina", "Заметки · идеи" to "Notas · ideas",
+        "Быстрые действия и устройства" to "Acciones rápidas y dispositivos", "Домашние дела" to "Tareas del hogar", "Все разделы внизу" to "Más secciones abajo",
+        "Семейный чат" to "Chat familiar", "Мой профиль" to "Mi perfil", "Имя не указано" to "Nombre sin indicar", "Локальный профиль" to "Perfil local",
+        "Имя" to "Nombre", "Дата рождения" to "Fecha de nacimiento", "Роль в семье" to "Rol familiar", "Родитель" to "Madre/padre", "Ребёнок" to "Hijo/a", "Другой" to "Otro",
+        "Аккаунт не подключён" to "Cuenta no conectada", "Настройки приложения" to "Ajustes de la aplicación", "Настройки" to "Ajustes", "← Назад" to "← Volver",
+        "Тема оформления" to "Tema visual", "Лаванда" to "Lavanda", "Шалфей" to "Salvia", "Океан" to "Océano", "Язык приложения" to "Idioma de la aplicación",
+        "Русский" to "Ruso", "English" to "Inglés", "中文（简体）" to "Chino simplificado", "Español" to "Español", "हिन्दी" to "Hindi",
+        "Выбор темы сохраняется на этом устройстве." to "El tema se guarda en este dispositivo.", "Выбор языка сохраняется на этом устройстве." to "El idioma se guarda en este dispositivo."
+    ),
+    "हिन्दी" to mapOf(
+        "Дом" to "होम", "Задачи" to "कार्य", "Календарь" to "कैलेंडर", "Чат" to "चैट", "Профиль" to "प्रोफ़ाइल",
+        "Теплее вместе" to "और करीब", "Добро пожаловать домой" to "घर में आपका स्वागत है", "Место, где собирается ваша семья" to "जहाँ आपका परिवार साथ आता है",
+        "Наш дом" to "हमारा घर", "Выбери комнату, чтобы войти" to "प्रवेश के लिए कमरा चुनें", "Кухня" to "रसोई", "Гостиная" to "बैठक कक्ष",
+        "Детская" to "बच्चों का कमरा", "Кабинет" to "अध्ययन कक्ष", "Прихожая" to "प्रवेश कक्ष", "Покупки · запасы" to "खरीदारी · भंडार",
+        "Общение · память" to "बातचीत · यादें", "Задачи · распорядок" to "कार्य · दिनचर्या", "Заметки · идеи" to "नोट्स · विचार",
+        "Быстрые действия и устройства" to "त्वरित कार्य और उपकरण", "Домашние дела" to "घर के काम", "Все разделы внизу" to "अन्य अनुभाग नीचे",
+        "Семейный чат" to "परिवार चैट", "Мой профиль" to "मेरी प्रोफ़ाइल", "Имя не указано" to "नाम नहीं दिया गया", "Локальный профиль" to "स्थानीय प्रोफ़ाइल",
+        "Имя" to "नाम", "Дата рождения" to "जन्म तिथि", "Роль в семье" to "परिवार में भूमिका", "Родитель" to "माता-पिता", "Ребёнок" to "बच्चा", "Другой" to "अन्य",
+        "Аккаунт не подключён" to "खाता कनेक्ट नहीं है", "Настройки приложения" to "ऐप सेटिंग्स", "Настройки" to "सेटिंग्स", "← Назад" to "← वापस",
+        "Тема оформления" to "थीम", "Лаванда" to "लैवेंडर", "Шалфей" to "सेज", "Океан" to "समुद्र", "Язык приложения" to "ऐप की भाषा",
+        "Русский" to "रूसी", "English" to "अंग्रेज़ी", "中文（简体）" to "सरलीकृत चीनी", "Español" to "स्पेनिश", "हिन्दी" to "हिन्दी",
+        "Выбор темы сохраняется на этом устройстве." to "थीम इस डिवाइस पर सहेजी जाती है।", "Выбор языка сохраняется на этом устройстве." to "भाषा इस डिवाइस पर सहेजी जाती है।"
+    )
+)
 
 private enum class Screen(val label: String, val symbol: String) {
     Home("Дом", "⌂"), Tasks("Задачи", "✓"), Calendar("Календарь", "▦"),
@@ -54,25 +125,38 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             var themeName by remember { mutableStateOf(LocalStore.loadTheme(context)) }
+            var languageName by remember { mutableStateOf(LocalStore.loadLanguage(context)) }
             val primary = when (themeName) {
+                "Obsidian Gold" -> Color(0xFFD4AF37)
                 "Шалфей" -> Color(0xFF557B65)
                 "Океан" -> Color(0xFF397C91)
                 else -> Color(0xFF7967B2)
             }
+            val goldTheme = themeName == "Obsidian Gold"
             val tint = when (themeName) {
+                "Obsidian Gold" -> Color(0xFF242424)
                 "Шалфей" -> Color(0xFFE8F1E8)
                 "Океан" -> Color(0xFFE7F3F7)
                 else -> Color(0xFFF0ECFA)
             }
-            MaterialTheme(colorScheme = lightColorScheme(
-                primary = primary, onPrimary = Color.White, background = Cream,
-                surface = Color.White, onSurface = Ink, surfaceVariant = tint,
-                secondaryContainer = Sage
-            )) {
-                Surface(Modifier.fillMaxSize(), color = Cream) {
-                    FamilyCoreApp(themeName) { selected ->
-                        themeName = selected
-                        LocalStore.saveTheme(context, selected)
+            CompositionLocalProvider(LocalAppLanguage provides languageName) {
+                MaterialTheme(colorScheme = if (goldTheme) darkColorScheme(
+                    primary = Color(0xFFD4AF37), onPrimary = Color(0xFF171717), background = Color(0xFF101010),
+                    surface = Color(0xFF1B1B1B), onSurface = Color(0xFFF3E7C2), surfaceVariant = tint,
+                    secondaryContainer = Color(0xFF302816), onBackground = Color(0xFFF3E7C2)
+                ) else lightColorScheme(
+                    primary = primary, onPrimary = Color.White, background = Cream,
+                    surface = Color.White, onSurface = Ink, surfaceVariant = tint,
+                    secondaryContainer = Sage
+                )) {
+                    Surface(Modifier.fillMaxSize(), color = if (goldTheme) Color(0xFF101010) else Cream) {
+                        FamilyCoreApp(themeName, onThemeChanged = { selected ->
+                            themeName = selected
+                            LocalStore.saveTheme(context, selected)
+                        }, languageName = languageName, onLanguageChanged = { selected ->
+                            languageName = selected
+                            LocalStore.saveLanguage(context, selected)
+                        })
                     }
                 }
             }
@@ -81,7 +165,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
+private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, languageName: String, onLanguageChanged: (String) -> Unit) {
     val context = LocalContext.current
     var screen by remember { mutableStateOf(Screen.Home) }
     var kitchenOpen by remember { mutableStateOf(false) }
@@ -132,14 +216,14 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
             Spacer(Modifier.height(3.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Box(Modifier.size(44.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(15.dp)), contentAlignment = Alignment.Center) {
-                    Text("F", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                    Text(tr("F"), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                 }
                 Column(Modifier.weight(1f)) {
-                    Text("FamilyCore", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
-                    Text("Теплее вместе", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                    Text(tr("FamilyCore"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
+                    Text(tr("Теплее вместе"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-                    Text("v${BuildConfig.VERSION_NAME}", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    Text(tr("v${BuildConfig.VERSION_NAME}"), Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 }
             }
             HorizontalDivider(color = Color(0xFFE9E3F1))
@@ -156,7 +240,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     onDeleteNote = { item -> notes.remove(item); LocalStore.saveNotes(context, notes); status = "Заметка удалена" },
                     onBack = { notesOpen = false }
                 )
-                settingsOpen -> SettingsScreen(themeName, onThemeChanged, onBack = { settingsOpen = false })
+                settingsOpen -> SettingsScreen(themeName, onThemeChanged, languageName, onLanguageChanged, onBack = { settingsOpen = false })
                 roomOpen != null -> RoomScreen(room = roomOpen!!, onBack = { roomOpen = null }, onKitchen = { roomOpen = null; kitchenOpen = true }, onTasks = { roomOpen = null; screen = Screen.Tasks }, onCalendar = { roomOpen = null; screen = Screen.Calendar }, onNotes = { roomOpen = null; notesOpen = true }, onChat = { roomOpen = null; screen = Screen.Chat })
                 kitchenOpen -> KitchenScreen(
                     shopping, pantry, shoppingTitle, { shoppingTitle = it }, pantryTitle, { pantryTitle = it },
@@ -236,8 +320,8 @@ private fun HomeScreen(
     LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
         item {
             Column(Modifier.fillMaxWidth().padding(top = 4.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text("Добро пожаловать домой", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
-                Text("Место, где собирается ваша семья", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+                Text(tr("Добро пожаловать домой"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
+                Text(tr("Место, где собирается ваша семья"), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
             }
         }
         item {
@@ -245,10 +329,10 @@ private fun HomeScreen(
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text("Наш дом", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Ink)
-                            Text("Выбери комнату, чтобы войти", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Ink)
+                            Text(tr("Выбери комнату, чтобы войти"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                         }
-                        Text("✦", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+                        Text(tr("✦"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
                     }
                     AnimatedHouseIllustration()
                     Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
@@ -265,8 +349,8 @@ private fun HomeScreen(
         }
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Домашние дела", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text("Все разделы внизу", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                Text(tr("Домашние дела"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                Text(tr("Все разделы внизу"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
             }
         }
         item {
@@ -362,35 +446,35 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(room, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            TextButton(onClick = onBack) { Text("← Домой") }
+            TextButton(onClick = onBack) { Text(tr("← Домой")) }
         }
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
             Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Box(Modifier.size(62.dp).background(Color.White, RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
                     Text(symbol, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
                 }
-                Text("Добро пожаловать", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(tr("Добро пожаловать"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Text(intro)
             }
         }
         when (room) {
-            "Кухня" -> Button(onClick = onKitchen, modifier = Modifier.fillMaxWidth()) { Text("Открыть покупки и запасы") }
+            "Кухня" -> Button(onClick = onKitchen, modifier = Modifier.fillMaxWidth()) { Text(tr("Открыть покупки и запасы")) }
             "Гостиная" -> {
-                Button(onClick = onChat, modifier = Modifier.fillMaxWidth()) { Text("Семейный чат") }
-                OutlinedButton(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text("Заметки и воспоминания") }
-                Text("Чат подключится после настройки серверной синхронизации.", style = MaterialTheme.typography.bodySmall)
+                Button(onClick = onChat, modifier = Modifier.fillMaxWidth()) { Text(tr("Семейный чат")) }
+                OutlinedButton(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text(tr("Заметки и воспоминания")) }
+                Text(tr("Чат подключится после настройки серверной синхронизации."), style = MaterialTheme.typography.bodySmall)
             }
             "Детская" -> {
-                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text("Задачи и домашние дела") }
-                OutlinedButton(onClick = onCalendar, modifier = Modifier.fillMaxWidth()) { Text("Расписание и события") }
+                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text(tr("Задачи и домашние дела")) }
+                OutlinedButton(onClick = onCalendar, modifier = Modifier.fillMaxWidth()) { Text(tr("Расписание и события")) }
             }
             "Кабинет" -> {
-                Button(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text("Открыть заметки") }
-                Text("Документы и ИИ-помощник появятся в следующих этапах.", style = MaterialTheme.typography.bodySmall)
+                Button(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text(tr("Открыть заметки")) }
+                Text(tr("Документы и ИИ-помощник появятся в следующих этапах."), style = MaterialTheme.typography.bodySmall)
             }
             else -> {
-                Text("Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации.")
-                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text("Посмотреть семейные дела") }
+                Text(tr("Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации."))
+                Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text(tr("Посмотреть семейные дела")) }
             }
         }
     }
@@ -418,7 +502,7 @@ private fun FeatureCard(title: String, description: String, symbol: String, onCl
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Text(description, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
             }
-            Text("›", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+            Text(tr("›"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
         }
     }
 }
@@ -437,19 +521,19 @@ private fun TasksScreen(
         else -> tasks
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Общие дела", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Text("Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена.", style = MaterialTheme.typography.bodySmall)
-        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Что нужно сделать?") }, singleLine = true)
-        OutlinedTextField(assignee, onAssignee, Modifier.fillMaxWidth(), label = { Text("Исполнитель (необязательно)") }, singleLine = true)
-        OutlinedTextField(dueDate, onDueDate, Modifier.fillMaxWidth(), label = { Text("Срок, например 20.10.2026") }, singleLine = true)
-        Text("Приоритет", style = MaterialTheme.typography.labelLarge)
+        Text(tr("Общие дела"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(tr("Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена."), style = MaterialTheme.typography.bodySmall)
+        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text(tr("Что нужно сделать?")) }, singleLine = true)
+        OutlinedTextField(assignee, onAssignee, Modifier.fillMaxWidth(), label = { Text(tr("Исполнитель (необязательно)")) }, singleLine = true)
+        OutlinedTextField(dueDate, onDueDate, Modifier.fillMaxWidth(), label = { Text(tr("Срок, например 20.10.2026")) }, singleLine = true)
+        Text(tr("Приоритет"), style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf("Низкий", "Обычный", "Высокий").forEach { value ->
                 if (priority == value) Button(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
                 else OutlinedButton(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
             }
         }
-        Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text("Добавить задачу") }
+        Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text(tr("Добавить задачу")) }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf("Все", "Активные", "Готовые").forEach { value ->
                 if (filter == value) Button(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(value) }
@@ -463,7 +547,7 @@ private fun TasksScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(task.done, { onToggle(task) })
                             Text(task.title, Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                            TextButton(onClick = { onRemove(task) }) { Text("Удалить") }
+                            TextButton(onClick = { onRemove(task) }) { Text(tr("Удалить")) }
                         }
                         val details = listOfNotNull(
                             task.assignee.takeIf { it.isNotBlank() }?.let { "Кому: $it" },
@@ -484,11 +568,11 @@ private fun TasksScreen(
 @Composable
 private fun CalendarScreen(events: List<FamilyEvent>, title: String, onTitle: (String) -> Unit, whenText: String, onWhen: (String) -> Unit, onAdd: () -> Unit, onRemove: (FamilyEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
-        Text("Семейный календарь", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Text("Локальные события, пока без системных напоминаний.")
-        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Название события") }, singleLine = true)
-        OutlinedTextField(whenText, onWhen, Modifier.fillMaxWidth(), label = { Text("Дата или время") }, singleLine = true)
-        Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text("Сохранить событие") }
+        Text(tr("Семейный календарь"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(tr("Локальные события, пока без системных напоминаний."))
+        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text(tr("Название события")) }, singleLine = true)
+        OutlinedTextField(whenText, onWhen, Modifier.fillMaxWidth(), label = { Text(tr("Дата или время")) }, singleLine = true)
+        Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text(tr("Сохранить событие")) }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(events, key = { it.id }) { event ->
                 Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
@@ -497,7 +581,7 @@ private fun CalendarScreen(events: List<FamilyEvent>, title: String, onTitle: (S
                             Text(event.title, fontWeight = FontWeight.SemiBold)
                             Text(event.whenText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                         }
-                        TextButton(onClick = { onRemove(event) }) { Text("Удалить") }
+                        TextButton(onClick = { onRemove(event) }) { Text(tr("Удалить")) }
                     }
                 }
             }
@@ -516,10 +600,10 @@ private fun KitchenScreen(
     var tab by remember { mutableStateOf("Покупки") }
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Кухня", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            TextButton(onClick = onBack) { Text("← Домой") }
+            Text(tr("Кухня"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text(tr("← Домой")) }
         }
-        Text("Список покупок, домашние запасы и рецепты.")
+        Text(tr("Список покупок, домашние запасы и рецепты."))
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             listOf("Покупки", "Запасы", "Рецепты").forEach { name ->
                 if (tab == name) Button(onClick = { tab = name }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp)) { Text(name) }
@@ -528,15 +612,15 @@ private fun KitchenScreen(
         }
         when (tab) {
             "Покупки" -> {
-                OutlinedTextField(shoppingTitle, onShoppingTitle, Modifier.fillMaxWidth(), label = { Text("Добавить продукт") }, singleLine = true)
-                Button(onClick = onAddShopping, modifier = Modifier.fillMaxWidth(), enabled = shoppingTitle.isNotBlank()) { Text("Добавить в список") }
+                OutlinedTextField(shoppingTitle, onShoppingTitle, Modifier.fillMaxWidth(), label = { Text(tr("Добавить продукт")) }, singleLine = true)
+                Button(onClick = onAddShopping, modifier = Modifier.fillMaxWidth(), enabled = shoppingTitle.isNotBlank()) { Text(tr("Добавить в список")) }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     items(shopping, key = { it.id }) { item ->
                         Card(colors = CardDefaults.cardColors(containerColor = if (item.bought) Sage else Color.White)) {
                             Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(item.bought, { onToggleShopping(item) })
                                 Text(item.title, Modifier.weight(1f))
-                                TextButton(onClick = { onRemoveShopping(item) }) { Text("Убрать") }
+                                TextButton(onClick = { onRemoveShopping(item) }) { Text(tr("Убрать")) }
                             }
                         }
                     }
@@ -544,18 +628,18 @@ private fun KitchenScreen(
                 }
             }
             "Запасы" -> {
-                OutlinedTextField(pantryTitle, onPantryTitle, Modifier.fillMaxWidth(), label = { Text("Продукт дома") }, singleLine = true)
-                OutlinedTextField(pantryExpiry, onPantryExpiry, Modifier.fillMaxWidth(), label = { Text("Срок годности (необязательно)") }, singleLine = true)
-                Button(onClick = onAddPantry, modifier = Modifier.fillMaxWidth(), enabled = pantryTitle.isNotBlank()) { Text("Добавить в запасы") }
+                OutlinedTextField(pantryTitle, onPantryTitle, Modifier.fillMaxWidth(), label = { Text(tr("Продукт дома")) }, singleLine = true)
+                OutlinedTextField(pantryExpiry, onPantryExpiry, Modifier.fillMaxWidth(), label = { Text(tr("Срок годности (необязательно)")) }, singleLine = true)
+                Button(onClick = onAddPantry, modifier = Modifier.fillMaxWidth(), enabled = pantryTitle.isNotBlank()) { Text(tr("Добавить в запасы")) }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     items(pantry, key = { it.id }) { item ->
                         Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
                             Row(Modifier.fillMaxWidth().padding(11.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
                                     Text(item.title, fontWeight = FontWeight.SemiBold)
-                                    Text("Срок: ${item.expiry}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                    Text(tr("Срок: ${item.expiry}"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                                 }
-                                TextButton(onClick = { onRemovePantry(item) }) { Text("Убрать") }
+                                TextButton(onClick = { onRemovePantry(item) }) { Text(tr("Убрать")) }
                             }
                         }
                     }
@@ -566,7 +650,7 @@ private fun KitchenScreen(
                 item { RecipeCard("Овсяная каша с яблоком", "Овсяные хлопья, молоко или вода, яблоко. Свари хлопья и добавь нарезанное яблоко.") }
                 item { RecipeCard("Овощной омлет", "Яйца, помидор, сладкий перец. Нарежь овощи, добавь яйца и готовь до полной готовности.") }
                 item { RecipeCard("Тёплый бутерброд с сыром", "Хлеб, сыр, по желанию помидор. Прогрей до расплавления сыра.") }
-                item { Text("Автоматическое меню и расчёт ингредиентов пока не подключены.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary) }
+                item { Text(tr("Автоматическое меню и расчёт ингредиентов пока не подключены."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary) }
             }
         }
     }
@@ -585,11 +669,11 @@ private fun RecipeCard(title: String, description: String) {
 @Composable
 private fun ChatScreen() {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Семейный чат", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(tr("Семейный чат"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(20.dp)) {
             Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Чат пока не подключён", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text("Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений.")
+                Text(tr("Чат пока не подключён"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(tr("Для настоящей переписки нужны семейные аккаунты, защищённая синхронизация и доставка сообщений. Здесь нет фиктивных участников или сообщений."))
             }
         }
     }
@@ -601,7 +685,7 @@ private fun ProfileScreen(
     role: String, onRole: (String) -> Unit, onOpenSettings: () -> Unit
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
-        item { Text("Мой профиль", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) }
+        item { Text(tr("Мой профиль"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) }
         item {
             Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(22.dp)) {
                 Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -610,16 +694,16 @@ private fun ProfileScreen(
                     }
                     Column {
                         Text(name.ifBlank { "Имя не указано" }, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                        Text("Локальный профиль", color = MaterialTheme.colorScheme.primary)
+                        Text(tr("Локальный профиль"), color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
         }
-        item { OutlinedTextField(name, onName, Modifier.fillMaxWidth(), label = { Text("Имя") }, singleLine = true) }
-        item { OutlinedTextField(birthday, onBirthday, Modifier.fillMaxWidth(), label = { Text("Дата рождения") }, placeholder = { Text("Например, 12.05.1995") }, singleLine = true) }
+        item { OutlinedTextField(name, onName, Modifier.fillMaxWidth(), label = { Text(tr("Имя")) }, singleLine = true) }
+        item { OutlinedTextField(birthday, onBirthday, Modifier.fillMaxWidth(), label = { Text(tr("Дата рождения")) }, placeholder = { Text(tr("Например, 12.05.1995")) }, singleLine = true) }
         item {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Роль в семье", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(tr("Роль в семье"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     listOf("Родитель", "Ребёнок", "Другой").forEach { value ->
                         if (role == value) Button(onClick = { onRole(value) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 7.dp)) { Text(value) }
@@ -631,28 +715,36 @@ private fun ProfileScreen(
         item {
             Surface(color = Color.White, shape = RoundedCornerShape(18.dp)) {
                 Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    Text("Аккаунт не подключён", fontWeight = FontWeight.SemiBold)
-                    Text("Профиль хранится только на этом устройстве. Семейная синхронизация пока не работает.", style = MaterialTheme.typography.bodySmall)
+                    Text(tr("Аккаунт не подключён"), fontWeight = FontWeight.SemiBold)
+                    Text(tr("Профиль хранится только на этом устройстве. Семейная синхронизация пока не работает."), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
-        item { OutlinedButton(onClick = onOpenSettings, modifier = Modifier.fillMaxWidth()) { Text("Настройки приложения") } }
+        item { OutlinedButton(onClick = onOpenSettings, modifier = Modifier.fillMaxWidth()) { Text(tr("Настройки приложения")) } }
     }
 }
 
 @Composable
-private fun SettingsScreen(themeName: String, onTheme: (String) -> Unit, onBack: () -> Unit) {
+private fun SettingsScreen(themeName: String, onTheme: (String) -> Unit, languageName: String, onLanguage: (String) -> Unit, onBack: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Настройки", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            TextButton(onClick = onBack) { Text("← Назад") }
+            Text(tr("Настройки"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text(tr("← Назад")) }
         }
-        Text("Тема оформления")
-        listOf("Лаванда", "Шалфей", "Океан").forEach { name ->
+        Text(tr("Тема оформления"))
+        listOf("Лаванда", "Шалфей", "Океан", "Obsidian Gold").forEach { name ->
             if (themeName == name) Button(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
             else OutlinedButton(onClick = { onTheme(name) }, modifier = Modifier.fillMaxWidth()) { Text(name) }
         }
-        Text("Выбор темы сохраняется на этом устройстве.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+        Text(tr("Выбор темы сохраняется на этом устройстве."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+        HorizontalDivider()
+        Text(tr("Язык приложения"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        listOf("Русский", "English", "中文（简体）", "Español", "हिन्दी").forEach { language ->
+            val selected = when (language) { "Русский" -> "Русский"; "English" -> "English"; "中文（简体）" -> "中文（简体）"; "Español" -> "Español"; else -> "हिन्दी" }
+            if (languageName == selected) Button(onClick = { onLanguage(selected) }, modifier = Modifier.fillMaxWidth()) { Text(language) }
+            else OutlinedButton(onClick = { onLanguage(selected) }, modifier = Modifier.fillMaxWidth()) { Text(language) }
+        }
+        Text(tr("Выбор языка сохраняется на этом устройстве."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -663,14 +755,14 @@ private fun NotesScreen(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Мои заметки", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            TextButton(onClick = onBack) { Text("← Назад") }
+            Text(tr("Мои заметки"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            TextButton(onClick = onBack) { Text(tr("← Назад")) }
         }
-        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Заголовок") }, singleLine = true)
-        OutlinedTextField(body, onBody, Modifier.fillMaxWidth(), label = { Text("Текст заметки") }, minLines = 2)
-        Button(onClick = onAddNote, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text("Сохранить заметку") }
-        OutlinedTextField(search, onSearch, Modifier.fillMaxWidth(), label = { Text("Поиск по заметкам") }, singleLine = true)
-        Text("Заметки · ${notes.size}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text(tr("Заголовок")) }, singleLine = true)
+        OutlinedTextField(body, onBody, Modifier.fillMaxWidth(), label = { Text(tr("Текст заметки")) }, minLines = 2)
+        Button(onClick = onAddNote, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank() || body.isNotBlank()) { Text(tr("Сохранить заметку")) }
+        OutlinedTextField(search, onSearch, Modifier.fillMaxWidth(), label = { Text(tr("Поиск по заметкам")) }, singleLine = true)
+        Text(tr("Заметки · ${notes.size}"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(notes, key = { it.id }) { note ->
                 Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
@@ -678,7 +770,7 @@ private fun NotesScreen(
                         Text(note.title, fontWeight = FontWeight.Bold)
                         if (note.body.isNotBlank()) Text(note.body)
                         Text(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(note.updatedAt)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                        TextButton(onClick = { onDeleteNote(note) }) { Text("Удалить") }
+                        TextButton(onClick = { onDeleteNote(note) }) { Text(tr("Удалить")) }
                     }
                 }
             }
@@ -727,6 +819,8 @@ private object LocalStore {
     fun saveProfileRole(c: Context, value: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("profile_role", value).apply() }
     fun loadTheme(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("theme", "Лаванда") ?: "Лаванда"
     fun saveTheme(c: Context, name: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("theme", name).apply() }
+    fun loadLanguage(c: Context): String = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("language", "Русский") ?: "Русский"
+    fun saveLanguage(c: Context, name: String) { c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("language", name).apply() }
     private fun <T> decode(c: Context, key: String, convert: (JSONObject) -> T): List<T> {
         val array = readArray(c, key)
         return try { (0 until array.length()).map { convert(array.getJSONObject(it)) } } catch (_: Exception) { emptyList() }
