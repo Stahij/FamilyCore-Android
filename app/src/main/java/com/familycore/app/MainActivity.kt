@@ -32,7 +32,7 @@ private enum class Screen(val label: String, val symbol: String) {
     Chat("Чат", "♡"), Profile("Профиль", "○")
 }
 private data class Note(val id: String, val title: String, val body: String, val updatedAt: Long)
-private data class FamilyTask(val id: String, val title: String, val done: Boolean)
+private data class FamilyTask(val id: String, val title: String, val done: Boolean, val assignee: String = "", val dueDate: String = "", val priority: String = "Обычный")
 private data class FamilyEvent(val id: String, val title: String, val whenText: String)
 private data class ShoppingItem(val id: String, val title: String, val bought: Boolean)
 private data class PantryItem(val id: String, val title: String, val expiry: String)
@@ -88,6 +88,9 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
     var noteTitle by remember { mutableStateOf("") }
     var noteBody by remember { mutableStateOf("") }
     var taskTitle by remember { mutableStateOf("") }
+    var taskAssignee by remember { mutableStateOf("") }
+    var taskDueDate by remember { mutableStateOf("") }
+    var taskPriority by remember { mutableStateOf("Обычный") }
     var eventTitle by remember { mutableStateOf("") }
     var eventWhen by remember { mutableStateOf("") }
     var shoppingTitle by remember { mutableStateOf("") }
@@ -125,7 +128,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     Text("Теплее вместе", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-                    Text("0.3.0", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    Text("v${BuildConfig.VERSION_NAME}", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 }
             }
             HorizontalDivider(color = Color(0xFFE9E3F1))
@@ -175,11 +178,11 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     onOpenChat = { screen = Screen.Chat }, onOpenRoom = { roomOpen = it }
                 )
                 screen == Screen.Tasks -> TasksScreen(
-                    tasks, taskTitle, { taskTitle = it },
+                    tasks, taskTitle, { taskTitle = it }, taskAssignee, { taskAssignee = it }, taskDueDate, { taskDueDate = it }, taskPriority, { taskPriority = it },
                     onAdd = {
                         if (taskTitle.isNotBlank()) {
-                            tasks.add(FamilyTask(UUID.randomUUID().toString(), taskTitle.trim(), false))
-                            LocalStore.saveTasks(context, tasks); taskTitle = ""; status = "Задача сохранена"
+                            tasks.add(FamilyTask(UUID.randomUUID().toString(), taskTitle.trim(), false, taskAssignee.trim(), taskDueDate.trim(), taskPriority))
+                            LocalStore.saveTasks(context, tasks); taskTitle = ""; taskAssignee = ""; taskDueDate = ""; taskPriority = "Обычный"; status = "Задача сохранена"
                         }
                     },
                     onToggle = { item ->
@@ -354,23 +357,59 @@ private fun FeatureCard(title: String, description: String, symbol: String, onCl
 }
 
 @Composable
-private fun TasksScreen(tasks: List<FamilyTask>, title: String, onTitle: (String) -> Unit, onAdd: () -> Unit, onToggle: (FamilyTask) -> Unit, onRemove: (FamilyTask) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
+private fun TasksScreen(
+    tasks: List<FamilyTask>, title: String, onTitle: (String) -> Unit,
+    assignee: String, onAssignee: (String) -> Unit, dueDate: String, onDueDate: (String) -> Unit,
+    priority: String, onPriority: (String) -> Unit,
+    onAdd: () -> Unit, onToggle: (FamilyTask) -> Unit, onRemove: (FamilyTask) -> Unit
+) {
+    var filter by remember { mutableStateOf("Все") }
+    val shown = when (filter) {
+        "Активные" -> tasks.filter { !it.done }
+        "Готовые" -> tasks.filter { it.done }
+        else -> tasks
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("Общие дела", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Text("Задачи пока доступны только на этом телефоне.")
-        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Новая задача") }, singleLine = true)
+        Text("Задачи пока сохраняются на этом телефоне. Семейная синхронизация ещё не подключена.", style = MaterialTheme.typography.bodySmall)
+        OutlinedTextField(title, onTitle, Modifier.fillMaxWidth(), label = { Text("Что нужно сделать?") }, singleLine = true)
+        OutlinedTextField(assignee, onAssignee, Modifier.fillMaxWidth(), label = { Text("Исполнитель (необязательно)") }, singleLine = true)
+        OutlinedTextField(dueDate, onDueDate, Modifier.fillMaxWidth(), label = { Text("Срок, например 20.10.2026") }, singleLine = true)
+        Text("Приоритет", style = MaterialTheme.typography.labelLarge)
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            listOf("Низкий", "Обычный", "Высокий").forEach { value ->
+                if (priority == value) Button(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
+                else OutlinedButton(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
+            }
+        }
         Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text("Добавить задачу") }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            listOf("Все", "Активные", "Готовые").forEach { value ->
+                if (filter == value) Button(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(value) }
+                else OutlinedButton(onClick = { filter = value }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) { Text(value) }
+            }
+        }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(tasks, key = { it.id }) { task ->
+            items(shown, key = { it.id }) { task ->
                 Card(colors = CardDefaults.cardColors(containerColor = if (task.done) Sage else Color.White)) {
-                    Row(Modifier.fillMaxWidth().padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(task.done, { onToggle(task) })
-                        Text(task.title, Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                        TextButton(onClick = { onRemove(task) }) { Text("Удалить") }
+                    Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(task.done, { onToggle(task) })
+                            Text(task.title, Modifier.weight(1f), fontWeight = FontWeight.Medium)
+                            TextButton(onClick = { onRemove(task) }) { Text("Удалить") }
+                        }
+                        val details = listOfNotNull(
+                            task.assignee.takeIf { it.isNotBlank() }?.let { "Кому: $it" },
+                            task.dueDate.takeIf { it.isNotBlank() }?.let { "Срок: $it" },
+                            "Приоритет: ${task.priority}"
+                        )
+                        Text(details.joinToString("  ·  "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
                     }
                 }
             }
-            if (tasks.isEmpty()) item { EmptyState("Здесь появятся семейные задачи.", "Добавь первое дело выше.") }
+            if (shown.isEmpty()) item {
+                EmptyState(if (filter == "Все") "Здесь появятся семейные задачи." else "В этом фильтре пока пусто.", "Добавь дело выше или выбери другой фильтр.")
+            }
         }
     }
 }
@@ -605,8 +644,8 @@ private object LocalStore {
         return (0 until array.length()).map { i -> array.getJSONObject(i).let { Note(it.str("id"), it.str("title"), it.str("body"), it.optLong("updatedAt")) } }
     }
     fun saveNotes(c: Context, list: List<Note>) = save(c, "notes", list.map { JSONObject().put("id", it.id).put("title", it.title).put("body", it.body).put("updatedAt", it.updatedAt) })
-    fun loadTasks(c: Context): List<FamilyTask> = decode(c, "tasks") { FamilyTask(it.str("id"), it.str("title"), it.optBoolean("done")) }
-    fun saveTasks(c: Context, list: List<FamilyTask>) = save(c, "tasks", list.map { JSONObject().put("id", it.id).put("title", it.title).put("done", it.done) })
+    fun loadTasks(c: Context): List<FamilyTask> = decode(c, "tasks") { FamilyTask(it.str("id"), it.str("title"), it.optBoolean("done"), it.optString("assignee", ""), it.optString("dueDate", ""), it.optString("priority", "Обычный")) }
+    fun saveTasks(c: Context, list: List<FamilyTask>) = save(c, "tasks", list.map { JSONObject().put("id", it.id).put("title", it.title).put("done", it.done).put("assignee", it.assignee).put("dueDate", it.dueDate).put("priority", it.priority) })
     fun loadEvents(c: Context): List<FamilyEvent> = decode(c, "events") { FamilyEvent(it.str("id"), it.str("title"), it.str("whenText")) }
     fun saveEvents(c: Context, list: List<FamilyEvent>) = save(c, "events", list.map { JSONObject().put("id", it.id).put("title", it.title).put("whenText", it.whenText) })
     fun loadShopping(c: Context): List<ShoppingItem> = decode(c, "shopping") { ShoppingItem(it.str("id"), it.str("title"), it.optBoolean("bought")) }
