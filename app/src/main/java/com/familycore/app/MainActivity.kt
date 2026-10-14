@@ -233,82 +233,109 @@ private fun HomeScreen(
     onOpenTasks: () -> Unit, onOpenCalendar: () -> Unit, onOpenNotes: () -> Unit,
     onOpenKitchen: () -> Unit, onOpenChat: () -> Unit, onOpenRoom: (String) -> Unit
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
         item {
-            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
-                Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Добро пожаловать домой", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
-                    Text("Семейные планы, маленькие дела и важные моменты.", color = Ink)
-                    Text("Твой семейный центр начинается здесь.", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                }
-            }
-        }
-        item { Text("Сегодня у семьи", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                SummaryCard("Задачи", openTasksCount.toString(), "Открыть список", Modifier.weight(1f), onOpenTasks)
-                SummaryCard("События", eventsCount.toString(), "К календарю", Modifier.weight(1f), onOpenCalendar)
+            Column(Modifier.fillMaxWidth().padding(top = 4.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text("Добро пожаловать домой", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
+                Text("Место, где собирается ваша семья", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
             }
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                SummaryCard("Покупки", shoppingCount.toString(), "К списку", Modifier.weight(1f), onOpenKitchen)
-                SummaryCard("Заметки", notesCount.toString(), "Мои записи", Modifier.weight(1f), onOpenNotes)
-            }
-        }
-        item { Text("Наш дом", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-        item {
-            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
-                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Коснись комнаты, чтобы войти", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                    AnimatedHouseIllustration()
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        RoomTile("Кухня", "Покупки", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
-                        RoomTile("Гостиная", "Общение", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
+            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(28.dp)) {
+                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text("Наш дом", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Ink)
+                            Text("Выбери комнату, чтобы войти", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                        }
+                        Text("✦", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
                     }
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        RoomTile("Детская", "Задачи", "☆", Modifier.weight(1f)) { onOpenRoom("Детская") }
-                        RoomTile("Кабинет", "Заметки", "▤", Modifier.weight(1f)) { onOpenRoom("Кабинет") }
+                    AnimatedHouseIllustration()
+                    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+                        RoomTile("Кухня", "Покупки · запасы", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
+                        RoomTile("Гостиная", "Общение · память", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+                        RoomTile("Детская", "Задачи · распорядок", "☆", Modifier.weight(1f)) { onOpenRoom("Детская") }
+                        RoomTile("Кабинет", "Заметки · идеи", "▤", Modifier.weight(1f)) { onOpenRoom("Кабинет") }
                     }
                     RoomTile("Прихожая", "Быстрые действия и устройства", "⌂", Modifier.fillMaxWidth()) { onOpenRoom("Прихожая") }
                 }
             }
         }
-        item { Text("Быстрый доступ", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-        item { FeatureCard("Общие дела", "Планируй и отмечай выполненное", "✓", onOpenTasks) }
-        item { FeatureCard("Календарь", "Храни важные даты и события", "▦", onOpenCalendar) }
-        item { FeatureCard("Семейный чат", "Будет доступен после подключения синхронизации", "♡", onOpenChat) }
+        item {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Домашние дела", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                Text("Все разделы внизу", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+            }
+        }
+        item {
+            Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+                SummaryCard("Задачи", openTasksCount.toString(), "Открыть", Modifier.weight(1f), onOpenTasks)
+                SummaryCard("События", eventsCount.toString(), "К календарю", Modifier.weight(1f), onOpenCalendar)
+            }
+        }
+        item {
+            Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+                SummaryCard("Покупки", shoppingCount.toString(), "К списку", Modifier.weight(1f), onOpenKitchen)
+                SummaryCard("Заметки", notesCount.toString(), "Мои записи", Modifier.weight(1f), onOpenNotes)
+            }
+        }
+        item { FeatureCard("Семейный чат", "Откроется после подключения защищённой синхронизации", "♡", onOpenChat) }
     }
 }
 
 @Composable
 private fun AnimatedHouseIllustration() {
     val motion = rememberInfiniteTransition(label = "houseAmbient")
-    val glow by motion.animateFloat(0.3f, 0.8f, infiniteRepeatable(tween(2400, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "windowGlow")
-    val floatY by motion.animateFloat(0f, -2f, infiniteRepeatable(tween(3200, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "houseFloat")
-    Canvas(Modifier.fillMaxWidth().height(166.dp).offset(y = floatY.dp)) {
+    val glow by motion.animateFloat(0.38f, 0.92f, infiniteRepeatable(tween(2600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "windowGlow")
+    val floatY by motion.animateFloat(0f, -1.5f, infiniteRepeatable(tween(3600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "houseFloat")
+    Canvas(Modifier.fillMaxWidth().height(218.dp).offset(y = floatY.dp)) {
         val w = size.width; val h = size.height
-        drawRoundRect(Color(0xFFDCD5EE), Offset(w*.08f,h*.76f), Size(w*.84f,h*.14f), androidx.compose.ui.geometry.CornerRadius(30f))
-        val left=w*.23f; val right=w*.77f; val top=h*.30f; val bottom=h*.77f
-        val wall=Path().apply { moveTo(left,top+h*.12f); lineTo(w*.50f,top-h*.06f); lineTo(right,top+h*.12f); lineTo(right,bottom); lineTo(left,bottom); close() }
-        drawPath(wall,Color(0xFFFFF9EF))
-        val roof=Path().apply { moveTo(left-w*.055f,top+h*.12f); lineTo(w*.50f,top-h*.17f); lineTo(right+w*.055f,top+h*.12f); close() }
-        drawPath(roof,Color(0xFF8A78B8)); drawPath(roof,Color(0xFF6D5A9B),style=Stroke(width=2.dp.toPx()))
-        drawLine(Color(0xFFE0D6C9),Offset(w*.50f,top+h*.02f),Offset(w*.50f,bottom),strokeWidth=2.dp.toPx())
-        drawLine(Color(0xFFE0D6C9),Offset(left,h*.57f),Offset(right,h*.57f),strokeWidth=2.dp.toPx())
-        listOf(Offset(w*.34f,h*.48f),Offset(w*.59f,h*.48f),Offset(w*.34f,h*.65f),Offset(w*.59f,h*.65f)).forEachIndexed { i,p ->
-            val c=if(i%2==0) Color(0xFFE6C77C) else Color(0xFFC8DCCB)
-            drawRoundRect(c.copy(alpha=if(i%2==0) glow else .9f),p,Size(w*.075f,h*.09f),androidx.compose.ui.geometry.CornerRadius(5f))
-            drawRoundRect(Color(0xFFB9A9D7),p,Size(w*.075f,h*.09f),androidx.compose.ui.geometry.CornerRadius(5f),style=Stroke(width=1.2.dp.toPx()))
+        // Soft garden and pathway
+        drawOval(Color(0xFFD9D1EA), Offset(w*.07f,h*.77f), Size(w*.86f,h*.15f))
+        drawOval(Color(0xFFE7E0F1), Offset(w*.12f,h*.73f), Size(w*.76f,h*.12f))
+        val left=w*.19f; val right=w*.81f; val top=h*.28f; val bottom=h*.78f
+        // Main walls, slight side plane for depth
+        val side=Path().apply { moveTo(right,top+h*.10f); lineTo(right+w*.07f,top+h*.16f); lineTo(right+w*.07f,bottom-h*.02f); lineTo(right,bottom); close() }
+        drawPath(side,Color(0xFFE8DCCB))
+        drawRect(Color(0xFFFFFAF1),Offset(left,top+h*.10f),Size(right-left,bottom-(top+h*.10f)))
+        // Roof with layered eaves and soft shadow
+        val shadow=Path().apply { moveTo(left-w*.07f,top+h*.12f); lineTo(w*.50f,top-h*.20f); lineTo(right+w*.07f,top+h*.12f); lineTo(right+w*.04f,top+h*.16f); lineTo(w*.50f,top-h*.15f); lineTo(left-w*.04f,top+h*.16f); close() }
+        drawPath(shadow,Color(0xFF6D5A9B).copy(alpha=.16f))
+        val roof=Path().apply { moveTo(left-w*.075f,top+h*.12f); lineTo(w*.50f,top-h*.23f); lineTo(right+w*.075f,top+h*.12f); close() }
+        drawPath(roof,Color(0xFF8D7ABD))
+        drawPath(roof,Color(0xFF6D5A9B),style=Stroke(width=2.4.dp.toPx()))
+        drawLine(Color(0xFFB8A6D8),Offset(w*.50f,top-h*.19f),Offset(w*.50f,top+h*.10f),strokeWidth=1.3.dp.toPx())
+        // Interior dividers make the rooms legible at a glance
+        drawLine(Color(0xFFE0D4C4),Offset(w*.50f,top+h*.10f),Offset(w*.50f,bottom),strokeWidth=3.dp.toPx())
+        drawLine(Color(0xFFE0D4C4),Offset(left,h*.55f),Offset(right,h*.55f),strokeWidth=3.dp.toPx())
+        // Four distinct room windows / room lights
+        val windows=listOf(
+            Triple(Offset(w*.29f,h*.43f),Color(0xFFF0D58E),true),
+            Triple(Offset(w*.59f,h*.43f),Color(0xFFC9DDCF),false),
+            Triple(Offset(w*.29f,h*.61f),Color(0xFFF0D58E),true),
+            Triple(Offset(w*.59f,h*.61f),Color(0xFFC9DDCF),false)
+        )
+        windows.forEachIndexed { i, item ->
+            val p=item.first; val base=item.second
+            drawRoundRect(Color(0xFFB6A3D1),Offset(p.x-2.dp.toPx(),p.y-2.dp.toPx()),Size(w*.105f+4.dp.toPx(),h*.105f+4.dp.toPx()),androidx.compose.ui.geometry.CornerRadius(7f))
+            drawRoundRect(base.copy(alpha=if(item.third) glow else .9f),p,Size(w*.105f,h*.105f),androidx.compose.ui.geometry.CornerRadius(5f))
+            drawLine(Color(0xFFFFF9EF),Offset(p.x+w*.052f,p.y),Offset(p.x+w*.052f,p.y+h*.105f),strokeWidth=1.2.dp.toPx())
+            drawLine(Color(0xFFFFF9EF),Offset(p.x,p.y+h*.052f),Offset(p.x+w*.105f,p.y+h*.052f),strokeWidth=1.2.dp.toPx())
         }
-        drawRoundRect(Color(0xFFB99B83),Offset(w*.455f,h*.63f),Size(w*.09f,h*.14f),androidx.compose.ui.geometry.CornerRadius(5f))
-        drawCircle(Color(0xFFFFE7A8),2.dp.toPx(),Offset(w*.525f,h*.70f))
-        val path=Path().apply { moveTo(w*.47f,h*.77f); lineTo(w*.40f,h*.91f); lineTo(w*.60f,h*.91f); lineTo(w*.53f,h*.77f); close() }
+        // Welcoming door and path
+        drawRoundRect(Color(0xFFB69A80),Offset(w*.445f,h*.63f),Size(w*.11f,h*.15f),androidx.compose.ui.geometry.CornerRadius(6f))
+        drawCircle(Color(0xFFFFE7A8),2.5.dp.toPx(),Offset(w*.53f,h*.71f))
+        val path=Path().apply { moveTo(w*.46f,h*.78f); lineTo(w*.37f,h*.94f); lineTo(w*.63f,h*.94f); lineTo(w*.54f,h*.78f); close() }
         drawPath(path,Color(0xFFF6EBDD))
-        drawCircle(Color(0xFF9D8AC8).copy(alpha=glow),3.dp.toPx(),Offset(w*.16f,h*.58f))
-        drawCircle(Color(0xFF9D8AC8).copy(alpha=.45f),2.dp.toPx(),Offset(w*.85f,h*.54f))
+        // Fireflies / ambient dots
+        drawCircle(Color(0xFF9D8AC8).copy(alpha=glow),3.dp.toPx(),Offset(w*.12f,h*.55f))
+        drawCircle(Color(0xFF9D8AC8).copy(alpha=.5f),2.dp.toPx(),Offset(w*.87f,h*.50f))
+        drawCircle(Color(0xFFE5C87D).copy(alpha=glow),2.dp.toPx(),Offset(w*.79f,h*.68f))
     }
 }
+
 @Composable
 private fun RoomTile(title: String, subtitle: String, symbol: String, modifier: Modifier, onClick: () -> Unit) {
     Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
