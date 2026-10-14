@@ -124,7 +124,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit) {
                     Text("Теплее вместе", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-                    Text("0.2.0", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    Text("0.3.0", Modifier.padding(horizontal = 10.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 }
             }
             HorizontalDivider(color = Color(0xFFE9E3F1))
