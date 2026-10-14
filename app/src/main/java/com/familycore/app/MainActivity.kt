@@ -77,7 +77,7 @@ private val translations: Map<String, Map<String, String>> = mapOf(
         "Аккаунт не подключён" to "账号尚未连接", "Настройки приложения" to "应用设置", "Настройки" to "设置", "← Назад" to "← 返回",
         "Тема оформления" to "外观主题", "Лаванда" to "薰衣草", "Шалфей" to "鼠尾草", "Океан" to "海洋", "Язык приложения" to "应用语言",
         "Русский" to "俄语", "English" to "英语", "中文（简体）" to "简体中文", "Español" to "西班牙语", "हिन्दी" to "印地语",
-        "Выбор темы сохраняется на этом устройстве." to "主题选择保存在本设备上。", "Выбор языка сохраняется на этом устройстве。" to "语言选择保存在本设备上。"
+        "Выбор темы сохраняется на этом устройстве." to "主题选择保存在本设备上。", "Выбор языка сохраняется на этом устройстве." to "语言选择保存在本设备上。"
     ),
     "Español" to mapOf(
         "Дом" to "Inicio", "Задачи" to "Tareas", "Календарь" to "Calendario", "Чат" to "Chat", "Профиль" to "Perfil",
@@ -197,13 +197,13 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
     Scaffold(
         containerColor = Cream,
         bottomBar = {
-            NavigationBar(containerColor = Color.White) {
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
                 Screen.entries.forEach { item ->
                     NavigationBarItem(
                         selected = screen == item && !kitchenOpen,
                         onClick = { screen = item; kitchenOpen = false; roomOpen = null; notesOpen = false; settingsOpen = false },
                         icon = { Text(item.symbol, style = MaterialTheme.typography.titleMedium) },
-                        label = { Text(item.label, maxLines = 1) }
+                        label = { Text(tr(item.label), maxLines = 1) }
                     )
                 }
             }
@@ -219,7 +219,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
                     Text(tr("F"), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                 }
                 Column(Modifier.weight(1f)) {
-                    Text(tr("FamilyCore"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
+                    Text(tr("FamilyCore"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     Text(tr("Теплее вместе"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
@@ -320,7 +320,7 @@ private fun HomeScreen(
     LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
         item {
             Column(Modifier.fillMaxWidth().padding(top = 4.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(tr("Добро пожаловать домой"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Ink)
+                Text(tr("Добро пожаловать домой"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                 Text(tr("Место, где собирается ваша семья"), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
             }
         }
@@ -329,7 +329,7 @@ private fun HomeScreen(
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Ink)
+                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                             Text(tr("Выбери комнату, чтобы войти"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                         }
                         Text(tr("✦"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
@@ -422,7 +422,7 @@ private fun AnimatedHouseIllustration() {
 
 @Composable
 private fun RoomTile(title: String, subtitle: String, symbol: String, modifier: Modifier, onClick: () -> Unit) {
-    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(13.dp)), contentAlignment = Alignment.Center) {
                 Text(symbol, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
@@ -450,7 +450,7 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
         }
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
             Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Box(Modifier.size(62.dp).background(Color.White, RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(62.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
                     Text(symbol, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
                 }
                 Text(tr("Добро пожаловать"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
@@ -482,9 +482,9 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
 
 @Composable
 private fun SummaryCard(title: String, value: String, subtitle: String, modifier: Modifier, onClick: () -> Unit) {
-    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(tr(title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Text(value, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6F687A))
         }
@@ -493,7 +493,7 @@ private fun SummaryCard(title: String, value: String, subtitle: String, modifier
 
 @Composable
 private fun FeatureCard(title: String, description: String, symbol: String, onClick: () -> Unit) {
-    Card(onClick = onClick, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(onClick = onClick, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Box(Modifier.size(42.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
                 Text(symbol, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
@@ -542,7 +542,7 @@ private fun TasksScreen(
         }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(shown, key = { it.id }) { task ->
-                Card(colors = CardDefaults.cardColors(containerColor = if (task.done) Sage else Color.White)) {
+                Card(colors = CardDefaults.cardColors(containerColor = if (task.done) Sage else MaterialTheme.colorScheme.surface)) {
                     Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(task.done, { onToggle(task) })
@@ -575,7 +575,7 @@ private fun CalendarScreen(events: List<FamilyEvent>, title: String, onTitle: (S
         Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text(tr("Сохранить событие")) }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(events, key = { it.id }) { event ->
-                Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                     Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text(event.title, fontWeight = FontWeight.SemiBold)
@@ -616,7 +616,7 @@ private fun KitchenScreen(
                 Button(onClick = onAddShopping, modifier = Modifier.fillMaxWidth(), enabled = shoppingTitle.isNotBlank()) { Text(tr("Добавить в список")) }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     items(shopping, key = { it.id }) { item ->
-                        Card(colors = CardDefaults.cardColors(containerColor = if (item.bought) Sage else Color.White)) {
+                        Card(colors = CardDefaults.cardColors(containerColor = if (item.bought) Sage else MaterialTheme.colorScheme.surface)) {
                             Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(item.bought, { onToggleShopping(item) })
                                 Text(item.title, Modifier.weight(1f))
@@ -633,7 +633,7 @@ private fun KitchenScreen(
                 Button(onClick = onAddPantry, modifier = Modifier.fillMaxWidth(), enabled = pantryTitle.isNotBlank()) { Text(tr("Добавить в запасы")) }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     items(pantry, key = { it.id }) { item ->
-                        Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                             Row(Modifier.fillMaxWidth().padding(11.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
                                     Text(item.title, fontWeight = FontWeight.SemiBold)
@@ -658,7 +658,7 @@ private fun KitchenScreen(
 
 @Composable
 private fun RecipeCard(title: String, description: String) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.fillMaxWidth().padding(13.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Text(description, style = MaterialTheme.typography.bodyMedium)
@@ -689,7 +689,7 @@ private fun ProfileScreen(
         item {
             Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(22.dp)) {
                 Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Box(Modifier.size(64.dp).background(Color.White, RoundedCornerShape(22.dp)), contentAlignment = Alignment.Center) {
+                    Box(Modifier.size(64.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(22.dp)), contentAlignment = Alignment.Center) {
                         Text(name.trim().firstOrNull()?.uppercase() ?: "?", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                     Column {
@@ -713,7 +713,7 @@ private fun ProfileScreen(
             }
         }
         item {
-            Surface(color = Color.White, shape = RoundedCornerShape(18.dp)) {
+            Surface(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(18.dp)) {
                 Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(tr("Аккаунт не подключён"), fontWeight = FontWeight.SemiBold)
                     Text(tr("Профиль хранится только на этом устройстве. Семейная синхронизация пока не работает."), style = MaterialTheme.typography.bodySmall)
@@ -765,7 +765,7 @@ private fun NotesScreen(
         Text(tr("Заметки · ${notes.size}"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(notes, key = { it.id }) { note ->
-                Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                     Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(note.title, fontWeight = FontWeight.Bold)
                         if (note.body.isNotBlank()) Text(note.body)
@@ -783,8 +783,8 @@ private fun NotesScreen(
 private fun EmptyState(title: String, subtitle: String) {
     Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(title, fontWeight = FontWeight.SemiBold)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall)
+            Text(tr(title), fontWeight = FontWeight.SemiBold)
+            Text(tr(subtitle), style = MaterialTheme.typography.bodySmall)
         }
     }
 }
