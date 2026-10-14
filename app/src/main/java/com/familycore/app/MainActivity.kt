@@ -716,7 +716,7 @@ private fun TasksScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf("Низкий", "Обычный", "Высокий").forEach { value ->
                 if (priority == value) Button(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(tr(value)) }
-                else OutlinedButton(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(value) }
+                else OutlinedButton(onClick = { onPriority(value) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)) { Text(tr(value)) }
             }
         }
         Button(onClick = onAdd, modifier = Modifier.fillMaxWidth(), enabled = title.isNotBlank()) { Text(tr("Добавить задачу")) }
