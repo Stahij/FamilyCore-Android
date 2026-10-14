@@ -1,4 +1,4 @@
-# FamilyCore Android — MVP 0.5.0
+# FamilyCore Android — MVP 0.6.0
 
 FamilyCore — локальный Android-прототип семейного цифрового центра.
 
