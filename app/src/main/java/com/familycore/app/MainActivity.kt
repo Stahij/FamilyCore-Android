@@ -5,6 +5,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -250,6 +261,7 @@ private fun HomeScreen(
             Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(24.dp)) {
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("Коснись комнаты, чтобы войти", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                    AnimatedHouseIllustration()
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         RoomTile("Кухня", "Покупки", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
                         RoomTile("Гостиная", "Общение", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
@@ -269,6 +281,34 @@ private fun HomeScreen(
     }
 }
 
+@Composable
+private fun AnimatedHouseIllustration() {
+    val motion = rememberInfiniteTransition(label = "houseAmbient")
+    val glow by motion.animateFloat(0.3f, 0.8f, infiniteRepeatable(tween(2400, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "windowGlow")
+    val floatY by motion.animateFloat(0f, -2f, infiniteRepeatable(tween(3200, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "houseFloat")
+    Canvas(Modifier.fillMaxWidth().height(166.dp).offset(y = floatY.dp)) {
+        val w = size.width; val h = size.height
+        drawRoundRect(Color(0xFFDCD5EE), Offset(w*.08f,h*.76f), Size(w*.84f,h*.14f), androidx.compose.ui.geometry.CornerRadius(30f))
+        val left=w*.23f; val right=w*.77f; val top=h*.30f; val bottom=h*.77f
+        val wall=Path().apply { moveTo(left,top+h*.12f); lineTo(w*.50f,top-h*.06f); lineTo(right,top+h*.12f); lineTo(right,bottom); lineTo(left,bottom); close() }
+        drawPath(wall,Color(0xFFFFF9EF))
+        val roof=Path().apply { moveTo(left-w*.055f,top+h*.12f); lineTo(w*.50f,top-h*.17f); lineTo(right+w*.055f,top+h*.12f); close() }
+        drawPath(roof,Color(0xFF8A78B8)); drawPath(roof,Color(0xFF6D5A9B),style=Stroke(width=2.dp.toPx()))
+        drawLine(Color(0xFFE0D6C9),Offset(w*.50f,top+h*.02f),Offset(w*.50f,bottom),strokeWidth=2.dp.toPx())
+        drawLine(Color(0xFFE0D6C9),Offset(left,h*.57f),Offset(right,h*.57f),strokeWidth=2.dp.toPx())
+        listOf(Offset(w*.34f,h*.48f),Offset(w*.59f,h*.48f),Offset(w*.34f,h*.65f),Offset(w*.59f,h*.65f)).forEachIndexed { i,p ->
+            val c=if(i%2==0) Color(0xFFE6C77C) else Color(0xFFC8DCCB)
+            drawRoundRect(c.copy(alpha=if(i%2==0) glow else .9f),p,Size(w*.075f,h*.09f),androidx.compose.ui.geometry.CornerRadius(5f))
+            drawRoundRect(Color(0xFFB9A9D7),p,Size(w*.075f,h*.09f),androidx.compose.ui.geometry.CornerRadius(5f),style=Stroke(width=1.2.dp.toPx()))
+        }
+        drawRoundRect(Color(0xFFB99B83),Offset(w*.455f,h*.63f),Size(w*.09f,h*.14f),androidx.compose.ui.geometry.CornerRadius(5f))
+        drawCircle(Color(0xFFFFE7A8),2.dp.toPx(),Offset(w*.525f,h*.70f))
+        val path=Path().apply { moveTo(w*.47f,h*.77f); lineTo(w*.40f,h*.91f); lineTo(w*.60f,h*.91f); lineTo(w*.53f,h*.77f); close() }
+        drawPath(path,Color(0xFFF6EBDD))
+        drawCircle(Color(0xFF9D8AC8).copy(alpha=glow),3.dp.toPx(),Offset(w*.16f,h*.58f))
+        drawCircle(Color(0xFF9D8AC8).copy(alpha=.45f),2.dp.toPx(),Offset(w*.85f,h*.54f))
+    }
+}
 @Composable
 private fun RoomTile(title: String, subtitle: String, symbol: String, modifier: Modifier, onClick: () -> Unit) {
     Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
