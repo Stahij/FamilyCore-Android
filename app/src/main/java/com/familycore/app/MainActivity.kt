@@ -26,6 +26,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -328,13 +329,17 @@ class MainActivity : ComponentActivity() {
                 MaterialTheme(colorScheme = if (goldTheme) darkColorScheme(
                     primary = Color(0xFFD4AF37), onPrimary = Color(0xFF171717), background = Color(0xFF101010),
                     surface = Color(0xFF1B1B1B), onSurface = Color(0xFFF3E7C2), surfaceVariant = tint,
-                    secondaryContainer = Color(0xFF302816), onBackground = Color(0xFFF3E7C2)
+                    secondaryContainer = Color(0xFF302816), onBackground = Color(0xFFF3E7C2),
+                    outline = Color(0xFF8C6F1F), outlineVariant = Color(0xFF493A18)
                 ) else lightColorScheme(
                     primary = primary, onPrimary = Color.White, background = Cream,
                     surface = Color.White, onSurface = Ink, surfaceVariant = tint,
                     secondaryContainer = Sage
                 )) {
-                    Surface(Modifier.fillMaxSize(), color = if (goldTheme) Color(0xFF101010) else Cream) {
+                    Surface(
+                        Modifier.fillMaxSize().then(if (goldTheme) Modifier.background(Brush.verticalGradient(listOf(Color(0xFF070707), Color(0xFF19160F), Color(0xFF080808)))) else Modifier),
+                        color = if (goldTheme) Color.Transparent else Cream
+                    ) {
                         FamilyCoreApp(themeName, onThemeChanged = { selected ->
                             themeName = selected
                             LocalStore.saveTheme(context, selected)
@@ -380,7 +385,7 @@ private fun FamilyCoreApp(themeName: String, onThemeChanged: (String) -> Unit, l
     var status by remember { mutableStateOf("Данные сохраняются на этом устройстве · синхронизации пока нет") }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = if (themeName == "Obsidian Gold") Color.Transparent else MaterialTheme.colorScheme.background,
         bottomBar = {
             NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
                 Screen.entries.forEach { item ->
