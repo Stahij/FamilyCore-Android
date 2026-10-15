@@ -513,26 +513,63 @@ private fun HomeScreen(
     onOpenTasks: () -> Unit, onOpenCalendar: () -> Unit, onOpenNotes: () -> Unit,
     onOpenKitchen: () -> Unit, onOpenChat: () -> Unit, onOpenRoom: (String) -> Unit
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
+    val muted = if (goldTheme) Color(0xFFB9B0A0) else MaterialTheme.colorScheme.onSurfaceVariant
+    val gold = if (goldTheme) Color(0xFFD4AF37) else MaterialTheme.colorScheme.primary
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 12.dp)
+    ) {
         item {
-            Column(Modifier.fillMaxWidth().padding(top = 4.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(tr("Добро пожаловать домой"), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
-                Text(tr("Место, где собирается ваша семья"), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+            Column(
+                Modifier.fillMaxWidth().padding(top = 1.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    tr("Добро пожаловать домой"),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    tr("Место, где собирается ваша семья"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = muted
+                )
             }
         }
         item {
             Surface(
-                color = if (goldTheme) Color(0xFF11100D) else MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(28.dp),
-                border = if (goldTheme) androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF8C6F1F)) else null
+                color = if (goldTheme) Color(0xFF11110F) else MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(26.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (goldTheme) Color(0xFF554526) else MaterialTheme.colorScheme.outlineVariant
+                )
             ) {
-                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = if (goldTheme) Color(0xFFF3E7C2) else MaterialTheme.colorScheme.onSurface)
-                            Text(tr("Нажми на комнату внутри дома"), style = MaterialTheme.typography.bodySmall, color = if (goldTheme) Color(0xFFD4AF37) else MaterialTheme.colorScheme.primary)
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                tr("Наш дом"),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (goldTheme) Color(0xFFF3E7C2) else MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                tr("Нажми на комнату внутри дома"),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = gold
+                            )
                         }
-                        Text("✦", style = MaterialTheme.typography.headlineMedium, color = if (goldTheme) Color(0xFFD4AF37) else MaterialTheme.colorScheme.primary)
+                        Text(
+                            "05",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = if (goldTheme) Color(0xFFD4AF37) else muted,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                     InteractiveHouseIllustration(goldTheme, onOpenRoom)
                 }
@@ -540,23 +577,39 @@ private fun HomeScreen(
         }
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(tr("Домашние дела"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text(tr("Все разделы внизу"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                Text(
+                    tr("Домашние дела"),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    tr("Все разделы внизу"),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = muted
+                )
             }
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 SummaryCard("Задачи", openTasksCount.toString(), "Открыть", Modifier.weight(1f), onOpenTasks)
                 SummaryCard("События", eventsCount.toString(), "К календарю", Modifier.weight(1f), onOpenCalendar)
             }
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-                SummaryCard("Покупки", shoppingCount.toString(), "К списку", Modifier.weight(1f), onOpenKitchen)
-                SummaryCard("Заметки", notesCount.toString(), "Мои записи", Modifier.weight(1f), onOpenNotes)
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(onClick = onOpenKitchen, modifier = Modifier.weight(1f)) {
+                    Text("□  ${tr("Покупки")} · $shoppingCount", maxLines = 1, style = MaterialTheme.typography.labelMedium)
+                }
+                TextButton(onClick = onOpenNotes, modifier = Modifier.weight(1f)) {
+                    Text("□  ${tr("Заметки")} · $notesCount", maxLines = 1, style = MaterialTheme.typography.labelMedium)
+                }
             }
         }
-        item { FeatureCard("Семейный чат", "Откроется после подключения защищённой синхронизации", "♡", onOpenChat) }
     }
 }
 
