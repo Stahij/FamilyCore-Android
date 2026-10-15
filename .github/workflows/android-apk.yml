@@ -1,7 +1,7 @@
-name: Build Android APK
+name: Build FamilyCore Android
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "release/**" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -18,20 +18,53 @@ jobs:
           distribution: temurin
           java-version: "17"
           cache: gradle
+      - name: Restore persistent test signing key
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: familycore-test-signing-v1
+      - name: Create test signing key on first run
+        run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkeypair -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.9"
-      - name: Show Gradle version
-        run: gradle --version
+          gradle-version: "8.11.1"
       - name: Run unit tests
         run: gradle testDebugUnitTest --stacktrace
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
-      - name: Upload APK artifact
+      - name: Build release bundle
+        run: gradle bundleRelease --stacktrace
+      - name: Verify APK signature and record certificate fingerprint
+        run: |
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)
+          "$APKSIGNER" verify --verbose --print-certs "$APK" | tee app/build/outputs/apk/debug/signature-report.txt
+          echo "APK SHA-256:" >> app/build/outputs/apk/debug/signature-report.txt
+          sha256sum "$APK" >> app/build/outputs/apk/debug/signature-report.txt
+          echo "Debug keystore certificate SHA-256:" >> app/build/outputs/apk/debug/signature-report.txt
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep -E "SHA256:|SHA-256:" >> app/build/outputs/apk/debug/signature-report.txt
+      - name: Upload signature diagnostics
         uses: actions/upload-artifact@v4
         with:
-          name: FamilyCore-debug-apk
+          name: FamilyCore-1.0.0-signature-report
+          path: app/build/outputs/apk/debug/signature-report.txt
+          retention-days: 30
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FamilyCore-1.0.0-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload release bundle (requires signing before Play upload)
+        uses: actions/upload-artifact@v4
+        with:
+          name: FamilyCore-1.0.0-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 14
