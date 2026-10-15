@@ -564,12 +564,6 @@ private fun HomeScreen(
                                 color = gold
                             )
                         }
-                        Text(
-                            "05",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = if (goldTheme) Color(0xFFD4AF37) else muted,
-                            fontWeight = FontWeight.Medium
-                        )
                     }
                     InteractiveHouseIllustration(goldTheme, onOpenRoom)
                 }
@@ -599,14 +593,37 @@ private fun HomeScreen(
         item {
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                TextButton(onClick = onOpenKitchen, modifier = Modifier.weight(1f)) {
-                    Text("□  ${tr("Покупки")} · $shoppingCount", maxLines = 1, style = MaterialTheme.typography.labelMedium)
+                Card(
+                    onClick = onOpenKitchen,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 14.dp),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text("🛒", style = MaterialTheme.typography.titleLarge)
+                        Text(tr("Покупки"), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                        Text("$shoppingCount", style = MaterialTheme.typography.bodySmall, color = gold)
+                    }
                 }
-                TextButton(onClick = onOpenNotes, modifier = Modifier.weight(1f)) {
-                    Text("□  ${tr("Заметки")} · $notesCount", maxLines = 1, style = MaterialTheme.typography.labelMedium)
+                Card(
+                    onClick = onOpenNotes,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 14.dp),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text("📝", style = MaterialTheme.typography.titleLarge)
+                        Text(tr("Заметки"), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                        Text("$notesCount", style = MaterialTheme.typography.bodySmall, color = gold)
+                    }
                 }
             }
         }
@@ -746,16 +763,43 @@ private fun RoomScreen(room: String, onBack: () -> Unit, onKitchen: () -> Unit, 
             "Кухня" -> Button(onClick = onKitchen, modifier = Modifier.fillMaxWidth()) { Text(tr("Открыть покупки и запасы")) }
             "Гостиная" -> {
                 Button(onClick = onChat, modifier = Modifier.fillMaxWidth()) { Text(tr("Семейный чат")) }
-                OutlinedButton(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text(tr("Заметки и воспоминания")) }
-                Text(tr("Чат подключится после настройки серверной синхронизации."), style = MaterialTheme.typography.bodySmall)
+                Text(
+                    tr("Чат подключится после настройки серверной синхронизации."),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(18.dp)
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(tr("Семейные воспоминания"), fontWeight = FontWeight.SemiBold)
+                        Text(
+                            tr("Фотоальбом и общие воспоминания появятся в отдельном разделе."),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
             "Детская" -> {
                 Button(onClick = onTasks, modifier = Modifier.fillMaxWidth()) { Text(tr("Задачи и домашние дела")) }
                 OutlinedButton(onClick = onCalendar, modifier = Modifier.fillMaxWidth()) { Text(tr("Расписание и события")) }
             }
             "Кабинет" -> {
-                Button(onClick = onNotes, modifier = Modifier.fillMaxWidth()) { Text(tr("Открыть заметки")) }
-                Text(tr("Документы и ИИ-помощник появятся в следующих этапах."), style = MaterialTheme.typography.bodySmall)
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(18.dp)
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(tr("Личные документы"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            tr("Раздел документов и приватного хранилища ещё не подключён. Заметки доступны отдельно с главного экрана."),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
             else -> {
                 Text(tr("Пока здесь доступны только локальные действия. Сопряжение устройств и сигналы помощи требуют защищённой реализации."))
