@@ -25,6 +25,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +47,7 @@ private fun tr(value: String): String = translations[LocalAppLanguage.current]?.
 
 private val translations: Map<String, Map<String, String>> = mapOf(
     "English" to mapOf(
+        "Нажми на комнату внутри дома" to "Tap a room inside the house",
         "Дом" to "Home", "Задачи" to "Tasks", "Календарь" to "Calendar", "Чат" to "Chat", "Профиль" to "Profile",
         "Теплее вместе" to "Closer together", "Добро пожаловать домой" to "Welcome home", "Место, где собирается ваша семья" to "A place for your family",
         "Наш дом" to "Our home", "Выбери комнату, чтобы войти" to "Choose a room to enter", "Кухня" to "Kitchen", "Гостиная" to "Living room",
@@ -67,6 +69,7 @@ private val translations: Map<String, Map<String, String>> = mapOf(
         "Список покупок сохранён" to "Shopping list saved", "Покупка удалена" to "Shopping item removed", "Статус задачи сохранён" to "Task status saved"
     ),
     "中文（简体）" to mapOf(
+        "Нажми на комнату внутри дома" to "点击房屋内的房间",
         "Дом" to "首页", "Задачи" to "任务", "Календарь" to "日历", "Чат" to "聊天", "Профиль" to "个人资料",
         "Теплее вместе" to "让家人更亲近", "Добро пожаловать домой" to "欢迎回家", "Место, где собирается ваша семья" to "家人相聚的地方",
         "Наш дом" to "我们的家", "Выбери комнату, чтобы войти" to "选择一个房间进入", "Кухня" to "厨房", "Гостиная" to "客厅",
@@ -81,6 +84,7 @@ private val translations: Map<String, Map<String, String>> = mapOf(
         "Выбор темы сохраняется на этом устройстве." to "主题选择保存在本设备上。", "Выбор языка сохраняется на этом устройстве." to "语言选择保存在本设备上。"
     ),
     "Español" to mapOf(
+        "Нажми на комнату внутри дома" to "Toca una habitación dentro de la casa",
         "Дом" to "Inicio", "Задачи" to "Tareas", "Календарь" to "Calendario", "Чат" to "Chat", "Профиль" to "Perfil",
         "Теплее вместе" to "Más unidos", "Добро пожаловать домой" to "Bienvenido a casa", "Место, где собирается ваша семья" to "Un lugar para toda la familia",
         "Наш дом" to "Nuestro hogar", "Выбери комнату, чтобы войти" to "Elige una habitación", "Кухня" to "Cocina", "Гостиная" to "Sala de estar",
@@ -95,6 +99,7 @@ private val translations: Map<String, Map<String, String>> = mapOf(
         "Выбор темы сохраняется на этом устройстве." to "El tema se guarda en este dispositivo.", "Выбор языка сохраняется на этом устройстве." to "El idioma se guarda en este dispositivo."
     ),
     "हिन्दी" to mapOf(
+        "Нажми на комнату внутри дома" to "घर के अंदर किसी कमरे पर टैप करें",
         "Дом" to "होम", "Задачи" to "कार्य", "Календарь" to "कैलेंडर", "Чат" to "चैट", "Профиль" to "प्रोफ़ाइल",
         "Теплее вместе" to "और करीब", "Добро пожаловать домой" to "घर में आपका स्वागत है", "Место, где собирается ваша семья" to "जहाँ आपका परिवार साथ आता है",
         "Наш дом" to "हमारा घर", "Выбери комнату, чтобы войти" to "प्रवेश के लिए कमरा चुनें", "Кухня" to "रसोई", "Гостиная" to "बैठक कक्ष",
