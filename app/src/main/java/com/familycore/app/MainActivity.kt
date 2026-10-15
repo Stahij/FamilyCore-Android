@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -28,7 +27,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
@@ -576,21 +574,7 @@ private fun InteractiveHouseIllustration(goldTheme: Boolean, onOpenRoom: (String
     val floor = if (goldTheme) Color(0xFF3A3020) else Color(0xFFE9DCC9)
     val furniture = if (goldTheme) Color(0xFF121212) else Color(0xFF8D7ABD)
     BoxWithConstraints(Modifier.fillMaxWidth().height(286.dp)) {
-        Canvas(
-            Modifier.fillMaxSize().pointerInput(onOpenRoom) {
-                androidx.compose.foundation.gestures.detectTapGestures { tap ->
-                    val x = tap.x / size.width
-                    val y = tap.y / size.height
-                    when {
-                        x in 0.22f..0.49f && y in 0.34f..0.55f -> onOpenRoom("Кухня")
-                        x in 0.51f..0.79f && y in 0.34f..0.55f -> onOpenRoom("Гостиная")
-                        x in 0.22f..0.49f && y in 0.56f..0.72f -> onOpenRoom("Детская")
-                        x in 0.60f..0.79f && y in 0.56f..0.72f -> onOpenRoom("Кабинет")
-                        x in 0.43f..0.60f && y in 0.64f..0.84f -> onOpenRoom("Прихожая")
-                    }
-                }
-            }
-        ) {
+        Canvas(Modifier.fillMaxSize()) {
             val w = size.width
             val h = size.height
             // Floating foundation and soft shadow
