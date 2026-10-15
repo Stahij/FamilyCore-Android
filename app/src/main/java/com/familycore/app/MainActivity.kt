@@ -515,25 +515,20 @@ private fun HomeScreen(
             }
         }
         item {
-            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(28.dp)) {
-                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Surface(
+                color = if (goldTheme) Color(0xFF11100D) else MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(28.dp),
+                border = if (goldTheme) androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF8C6F1F)) else null
+            ) {
+                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
-                            Text(tr("Выбери комнату, чтобы войти"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            Text(tr("Наш дом"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = if (goldTheme) Color(0xFFF3E7C2) else MaterialTheme.colorScheme.onSurface)
+                            Text(tr("Нажми на комнату внутри дома"), style = MaterialTheme.typography.bodySmall, color = if (goldTheme) Color(0xFFD4AF37) else MaterialTheme.colorScheme.primary)
                         }
-                        Text(tr("✦"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+                        Text("✦", style = MaterialTheme.typography.headlineMedium, color = if (goldTheme) Color(0xFFD4AF37) else MaterialTheme.colorScheme.primary)
                     }
-                    AnimatedHouseIllustration(goldTheme)
-                    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-                        RoomTile("Кухня", "Покупки · запасы", "⌂", Modifier.weight(1f)) { onOpenRoom("Кухня") }
-                        RoomTile("Гостиная", "Общение · память", "♡", Modifier.weight(1f)) { onOpenRoom("Гостиная") }
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-                        RoomTile("Детская", "Задачи · распорядок", "☆", Modifier.weight(1f)) { onOpenRoom("Детская") }
-                        RoomTile("Кабинет", "Заметки · идеи", "▤", Modifier.weight(1f)) { onOpenRoom("Кабинет") }
-                    }
-                    RoomTile("Прихожая", "Быстрые действия и устройства", "⌂", Modifier.fillMaxWidth()) { onOpenRoom("Прихожая") }
+                    InteractiveHouseIllustration(goldTheme, onOpenRoom)
                 }
             }
         }
@@ -560,53 +555,108 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun AnimatedHouseIllustration(goldTheme: Boolean) {
-    val motion = rememberInfiniteTransition(label = "houseAmbient")
-    val glow by motion.animateFloat(0.38f, 0.92f, infiniteRepeatable(tween(2600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "windowGlow")
-    val floatY by motion.animateFloat(0f, -1.5f, infiniteRepeatable(tween(3600, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "houseFloat")
-    Canvas(Modifier.fillMaxWidth().height(218.dp).offset(y = floatY.dp)) {
-        val w = size.width; val h = size.height
-        // Soft garden and pathway
-        drawOval(if (goldTheme) Color(0xFF171717) else Color(0xFFD9D1EA), Offset(w*.07f,h*.77f), Size(w*.86f,h*.15f))
-        drawOval(if (goldTheme) Color(0xFF202020) else Color(0xFFE7E0F1), Offset(w*.12f,h*.73f), Size(w*.76f,h*.12f))
-        val left=w*.19f; val right=w*.81f; val top=h*.28f; val bottom=h*.78f
-        // Main walls, slight side plane for depth
-        val side=Path().apply { moveTo(right,top+h*.10f); lineTo(right+w*.07f,top+h*.16f); lineTo(right+w*.07f,bottom-h*.02f); lineTo(right,bottom); close() }
-        drawPath(side,if (goldTheme) Color(0xFF171717) else Color(0xFFE8DCCB))
-        drawRect(if (goldTheme) Color(0xFF242424) else Color(0xFFFFFAF1),Offset(left,top+h*.10f),Size(right-left,bottom-(top+h*.10f)))
-        // Roof with layered eaves and soft shadow
-        val shadow=Path().apply { moveTo(left-w*.07f,top+h*.12f); lineTo(w*.50f,top-h*.20f); lineTo(right+w*.07f,top+h*.12f); lineTo(right+w*.04f,top+h*.16f); lineTo(w*.50f,top-h*.15f); lineTo(left-w*.04f,top+h*.16f); close() }
-        drawPath(shadow,(if (goldTheme) Color(0xFFD4AF37) else Color(0xFF6D5A9B)).copy(alpha=.16f))
-        val roof=Path().apply { moveTo(left-w*.075f,top+h*.12f); lineTo(w*.50f,top-h*.23f); lineTo(right+w*.075f,top+h*.12f); close() }
-        drawPath(roof,if (goldTheme) Color(0xFF0B0B0B) else Color(0xFF8D7ABD))
-        drawPath(roof,if (goldTheme) Color(0xFFD4AF37) else Color(0xFF6D5A9B),style=Stroke(width=2.4.dp.toPx()))
-        drawLine(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB8A6D8),Offset(w*.50f,top-h*.19f),Offset(w*.50f,top+h*.10f),strokeWidth=1.3.dp.toPx())
-        // Interior dividers make the rooms legible at a glance
-        drawLine(if (goldTheme) Color(0xFF5B4A20) else Color(0xFFE0D4C4),Offset(w*.50f,top+h*.10f),Offset(w*.50f,bottom),strokeWidth=3.dp.toPx())
-        drawLine(if (goldTheme) Color(0xFF5B4A20) else Color(0xFFE0D4C4),Offset(left,h*.55f),Offset(right,h*.55f),strokeWidth=3.dp.toPx())
-        // Four distinct room windows / room lights
-        val windows=listOf(
-            Triple(Offset(w*.29f,h*.43f),if (goldTheme) Color(0xFFFFD86B) else Color(0xFFF0D58E),true),
-            Triple(Offset(w*.59f,h*.43f),if (goldTheme) Color(0xFFD4AF37) else Color(0xFFC9DDCF),false),
-            Triple(Offset(w*.29f,h*.61f),if (goldTheme) Color(0xFFFFD86B) else Color(0xFFF0D58E),true),
-            Triple(Offset(w*.59f,h*.61f),if (goldTheme) Color(0xFFD4AF37) else Color(0xFFC9DDCF),false)
-        )
-        windows.forEachIndexed { i, item ->
-            val p=item.first; val base=item.second
-            drawRoundRect(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB6A3D1),Offset(p.x-2.dp.toPx(),p.y-2.dp.toPx()),Size(w*.105f+4.dp.toPx(),h*.105f+4.dp.toPx()),androidx.compose.ui.geometry.CornerRadius(7f))
-            drawRoundRect(base.copy(alpha=if(item.third) glow else .9f),p,Size(w*.105f,h*.105f),androidx.compose.ui.geometry.CornerRadius(5f))
-            drawLine(if (goldTheme) Color(0xFFFFE8A3) else Color(0xFFFFF9EF),Offset(p.x+w*.052f,p.y),Offset(p.x+w*.052f,p.y+h*.105f),strokeWidth=1.2.dp.toPx())
-            drawLine(if (goldTheme) Color(0xFFFFE8A3) else Color(0xFFFFF9EF),Offset(p.x,p.y+h*.052f),Offset(p.x+w*.105f,p.y+h*.052f),strokeWidth=1.2.dp.toPx())
+private fun InteractiveHouseIllustration(goldTheme: Boolean, onOpenRoom: (String) -> Unit) {
+    val motion = rememberInfiniteTransition(label = "interactiveHouse")
+    val glow by motion.animateFloat(
+        initialValue = 0.55f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(2200, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        label = "goldWindowGlow"
+    )
+    val gold = if (goldTheme) Color(0xFFD4AF37) else Color(0xFF77649E)
+    val edge = if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB7A4D0)
+    val wall = if (goldTheme) Color(0xFF29251C) else Color(0xFFFFF8EB)
+    val floor = if (goldTheme) Color(0xFF3A3020) else Color(0xFFE9DCC9)
+    val furniture = if (goldTheme) Color(0xFF121212) else Color(0xFF8D7ABD)
+    BoxWithConstraints(Modifier.fillMaxWidth().height(286.dp)) {
+        Canvas(
+            Modifier.fillMaxSize().pointerInput(onOpenRoom) {
+                androidx.compose.foundation.gestures.detectTapGestures { tap ->
+                    val x = tap.x / size.width
+                    val y = tap.y / size.height
+                    when {
+                        x in 0.22f..0.49f && y in 0.34f..0.55f -> onOpenRoom("Кухня")
+                        x in 0.51f..0.79f && y in 0.34f..0.55f -> onOpenRoom("Гостиная")
+                        x in 0.22f..0.49f && y in 0.56f..0.72f -> onOpenRoom("Детская")
+                        x in 0.60f..0.79f && y in 0.56f..0.72f -> onOpenRoom("Кабинет")
+                        x in 0.43f..0.60f && y in 0.64f..0.84f -> onOpenRoom("Прихожая")
+                    }
+                }
+            }
+        ) {
+            val w = size.width
+            val h = size.height
+            // Floating foundation and soft shadow
+            drawOval(Color.Black.copy(alpha = if (goldTheme) .45f else .12f), Offset(w*.08f,h*.79f), Size(w*.84f,h*.15f))
+            drawOval(if (goldTheme) Color(0xFF211B10) else Color(0xFFE1D7E9), Offset(w*.12f,h*.76f), Size(w*.76f,h*.13f))
+            val left=w*.17f; val right=w*.83f; val top=h*.28f; val bottom=h*.78f
+            // Right exterior wall creates a visible 3D side plane
+            val side=Path().apply { moveTo(right,top+h*.07f); lineTo(right+w*.065f,top+h*.12f); lineTo(right+w*.065f,bottom-h*.015f); lineTo(right,bottom); close() }
+            drawPath(side, if (goldTheme) Color(0xFF171511) else Color(0xFFD0C3B2))
+            drawPath(side, edge.copy(alpha=.8f), style=Stroke(width=1.5.dp.toPx()))
+            // Main back wall and five warm floor zones
+            drawRect(wall, Offset(left,top+h*.08f), Size(right-left,bottom-(top+h*.08f)))
+            drawRect(floor, Offset(left,top+h*.29f), Size(right-left,bottom-(top+h*.29f)))
+            drawRect(if(goldTheme) Color(0xFF4B3B1D) else Color(0xFFE8D8C3), Offset(left,top+h*.29f), Size((right-left)*.5f,(bottom-top)*.245f))
+            drawRect(if(goldTheme) Color(0xFF342B1A) else Color(0xFFF1E5D5), Offset(w*.50f,top+h*.29f), Size((right-left)*.5f,(bottom-top)*.245f))
+            drawRect(if(goldTheme) Color(0xFF302718) else Color(0xFFE3D4C1), Offset(left,top+h*.535f), Size((right-left)*.5f,(bottom-top)*.22f))
+            drawRect(if(goldTheme) Color(0xFF42351E) else Color(0xFFF4E8D8), Offset(w*.50f,top+h*.535f), Size((right-left)*.5f,(bottom-top)*.22f))
+            // Glossy black roof with gold edging
+            val roof=Path().apply { moveTo(left-w*.07f,top+h*.10f); lineTo(w*.50f,top-h*.20f); lineTo(right+w*.07f,top+h*.10f); lineTo(right+w*.025f,top+h*.15f); lineTo(w*.50f,top-h*.12f); lineTo(left-w*.025f,top+h*.15f); close() }
+            drawPath(roof, if (goldTheme) Color(0xFF080808) else Color(0xFF8D7ABD))
+            drawPath(roof, gold, style=Stroke(width=2.8.dp.toPx()))
+            drawLine(edge, Offset(w*.50f,top-h*.17f), Offset(w*.50f,top+h*.08f), strokeWidth=1.5.dp.toPx())
+            // Room partitions, beveled edges and floor perspective
+            drawLine(edge, Offset(w*.50f,top+h*.08f), Offset(w*.50f,bottom), strokeWidth=4.dp.toPx())
+            drawLine(edge.copy(alpha=.9f), Offset(left,top+h*.535f), Offset(right,bottom-h*.22f), strokeWidth=3.dp.toPx())
+            drawLine(edge, Offset(left,top+h*.29f), Offset(right,top+h*.29f), strokeWidth=2.dp.toPx())
+            // Kitchen counters and sink
+            drawRoundRect(furniture, Offset(w*.235f,h*.405f), Size(w*.17f,h*.035f), androidx.compose.ui.geometry.CornerRadius(5f))
+            drawRoundRect(gold.copy(alpha=.9f), Offset(w*.255f,h*.412f), Size(w*.045f,h*.016f), androidx.compose.ui.geometry.CornerRadius(3f))
+            drawRoundRect(furniture, Offset(w*.265f,h*.46f), Size(w*.105f,h*.035f), androidx.compose.ui.geometry.CornerRadius(4f))
+            // Living-room sofa and low table
+            drawRoundRect(furniture, Offset(w*.57f,h*.405f), Size(w*.15f,h*.055f), androidx.compose.ui.geometry.CornerRadius(7f))
+            drawRoundRect(gold.copy(alpha=.75f), Offset(w*.585f,h*.413f), Size(w*.12f,h*.015f), androidx.compose.ui.geometry.CornerRadius(4f))
+            drawRoundRect(furniture, Offset(w*.61f,h*.475f), Size(w*.075f,h*.026f), androidx.compose.ui.geometry.CornerRadius(4f))
+            // Children's bed and small desk
+            drawRoundRect(furniture, Offset(w*.235f,h*.585f), Size(w*.13f,h*.045f), androidx.compose.ui.geometry.CornerRadius(4f))
+            drawRoundRect(if(goldTheme) Color(0xFFD4AF37) else Color(0xFFE9C7A0), Offset(w*.245f,h*.591f), Size(w*.105f,h*.018f), androidx.compose.ui.geometry.CornerRadius(3f))
+            drawRoundRect(furniture, Offset(w*.37f,h*.635f), Size(w*.07f,h*.025f), androidx.compose.ui.geometry.CornerRadius(3f))
+            // Office desk and glowing screen
+            drawRoundRect(furniture, Offset(w*.625f,h*.585f), Size(w*.12f,h*.035f), androidx.compose.ui.geometry.CornerRadius(4f))
+            drawRoundRect(gold.copy(alpha=glow), Offset(w*.66f,h*.55f), Size(w*.045f,h*.035f), androidx.compose.ui.geometry.CornerRadius(2f))
+            // Entryway door and a gold handle
+            drawRoundRect(if(goldTheme) Color(0xFF0B0B0B) else Color(0xFFB69A80), Offset(w*.445f,h*.655f), Size(w*.11f,h*.13f), androidx.compose.ui.geometry.CornerRadius(5f))
+            drawRoundRect(gold, Offset(w*.535f,h*.71f), Size(w*.008f,h*.012f), androidx.compose.ui.geometry.CornerRadius(2f))
+            // Front edge / foundation highlight
+            val base=Path().apply { moveTo(left,bottom); lineTo(w*.50f,bottom+h*.055f); lineTo(right,bottom); lineTo(right+w*.065f,bottom-h*.015f); lineTo(w*.50f,bottom+h*.09f); lineTo(left,bottom); close() }
+            drawPath(base, if(goldTheme) Color(0xFF17130C) else Color(0xFFD8C9B5))
+            drawPath(base, gold.copy(alpha=.8f), style=Stroke(width=1.6.dp.toPx()))
+            // Window lights on the back wall
+            listOf(Offset(w*.275f,h*.345f),Offset(w*.64f,h*.345f)).forEach { p ->
+                drawRoundRect(gold.copy(alpha=.28f), Offset(p.x-3.dp.toPx(),p.y-3.dp.toPx()), Size(w*.09f+6.dp.toPx(),h*.075f+6.dp.toPx()), androidx.compose.ui.geometry.CornerRadius(5f))
+                drawRoundRect(gold.copy(alpha=glow), p, Size(w*.09f,h*.075f), androidx.compose.ui.geometry.CornerRadius(4f))
+                drawLine(Color(0xFFFFEAB1), Offset(p.x+w*.045f,p.y), Offset(p.x+w*.045f,p.y+h*.075f), strokeWidth=1.dp.toPx())
+            }
         }
-        // Welcoming door and path
-        drawRoundRect(if (goldTheme) Color(0xFF8C6F1F) else Color(0xFFB69A80),Offset(w*.445f,h*.63f),Size(w*.11f,h*.15f),androidx.compose.ui.geometry.CornerRadius(6f))
-        drawCircle(Color(0xFFFFE7A8),2.5.dp.toPx(),Offset(w*.53f,h*.71f))
-        val path=Path().apply { moveTo(w*.46f,h*.78f); lineTo(w*.37f,h*.94f); lineTo(w*.63f,h*.94f); lineTo(w*.54f,h*.78f); close() }
-        drawPath(path,if (goldTheme) Color(0xFF191919) else Color(0xFFF6EBDD))
-        // Fireflies / ambient dots
-        drawCircle((if (goldTheme) Color(0xFFD4AF37) else Color(0xFF9D8AC8)).copy(alpha=glow),3.dp.toPx(),Offset(w*.12f,h*.55f))
-        drawCircle((if (goldTheme) Color(0xFFD4AF37) else Color(0xFF9D8AC8)).copy(alpha=.5f),2.dp.toPx(),Offset(w*.87f,h*.50f))
-        drawCircle(Color(0xFFE5C87D).copy(alpha=glow),2.dp.toPx(),Offset(w*.79f,h*.68f))
+        // Room labels are placed over the illustrated rooms and are themselves part of the room hit areas.
+        @Composable
+        fun RoomLabel(label: String, x: Float, y: Float, widthFraction: Float, callback: () -> Unit) {
+            Surface(
+                onClick = callback,
+                modifier = Modifier.offset(x = maxWidth * x, y = maxHeight * y).width(maxWidth * widthFraction),
+                color = if (goldTheme) Color(0xCC080808) else Color(0xDDFBF5E9),
+                contentColor = if (goldTheme) Color(0xFFFFD86B) else Color(0xFF4E3B72),
+                shape = RoundedCornerShape(7.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, if (goldTheme) Color(0xFFB99537) else Color(0xFFB7A4D0))
+            ) {
+                Text(tr(label), modifier = Modifier.padding(horizontal = 2.dp, vertical = 3.dp), style = MaterialTheme.typography.labelSmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 1)
+            }
+        }
+        RoomLabel("Кухня", maxWidth.value * .235f / maxWidth.value, .465f, .17f) { onOpenRoom("Кухня") }
+        RoomLabel("Гостиная", .565f, .465f, .19f) { onOpenRoom("Гостиная") }
+        RoomLabel("Детская", .245f, .635f, .18f) { onOpenRoom("Детская") }
+        RoomLabel("Кабинет", .625f, .635f, .16f) { onOpenRoom("Кабинет") }
+        RoomLabel("Прихожая", .415f, .735f, .18f) { onOpenRoom("Прихожая") }
     }
 }
 
