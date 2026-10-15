@@ -51,20 +51,20 @@ jobs:
       - name: Upload signature diagnostics
         uses: actions/upload-artifact@v4
         with:
-          name: FamilyCore-0.9.0-signature-report
+          name: FamilyCore-1.0.0-signature-report
           path: app/build/outputs/apk/debug/signature-report.txt
           retention-days: 30
       - name: Upload test APK
         uses: actions/upload-artifact@v4
         with:
-          name: FamilyCore-0.9.0-debug-apk
+          name: FamilyCore-1.0.0-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
       - name: Upload release bundle (requires signing before Play upload)
         uses: actions/upload-artifact@v4
         with:
-          name: FamilyCore-0.9.0-release-aab
+          name: FamilyCore-1.0.0-release-aab
           path: app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 14
